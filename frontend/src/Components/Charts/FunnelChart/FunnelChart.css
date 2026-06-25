@@ -1,0 +1,18 @@
+.funnel-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.funnel-chart-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.funnel-chart-container canvas {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border: 1px solid #ddd;
+}

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>अनुज्ञप्ती प्रमाणपत्र</title>
+    <!-- Prioritize Noto Sans Devanagari for Marathi -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', Arial, sans-serif;
+            font-size: 14.5px; /* Fine-tuned for closer match to PDF */
+            margin: 0;
+            padding: 15px;
+            background: #fff;
+            line-height: 1.5;
+            box-sizing: border-box;
+        }
+
+        .certificate-box {
+            border: 2px solid #000;
+            padding: 15px 25px; /* Increased padding slightly for better visual space */
+            max-width: 800px; /* Max width for A4-like print */
+            margin: auto;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for visual appeal */
+        }
+
+        /* --- Top-most row for Place and Date --- */
+        .top-most-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px; /* Adjusted font size */
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        .top-most-row p {
+            margin: 0;
+            line-height: 1.0;
+        }
+
+        /* --- Header Section (containing logos and main titles) --- */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align logos/text to the top */
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        .header-left, .header-center, .header-right {
+            flex: 1;
+            text-align: center;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+
+        .header-center {
+            flex: 2; /* Give more space to the center content */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically in this flex item */
+            margin-bottom: 8px; /* Add some space below the centered content before the double line */
+        }
+
+        /* --- Logo Styles --- */
+        .logo {
+            height: 60px; /* Increased height for both logos */
+            width: auto;
+            display: block;
+            margin: 0 auto 5px auto; /* Add margin-bottom for spacing */
+            object-fit: contain; /* Ensures image scales within its bounds without distortion */
+        }
+
+        /* --- Text Styling --- */
+        .ulb-place-top {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.2;
+            white-space: nowrap; /* Prevent wrapping for place name */
+            color: red; /* Added color: red as requested */
+        }
+        .dept-name {
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 2px;
+            line-height: 1.2;
+            color: #007bff; /* Added blue color as requested */
+        }
+        .act-details {
+            font-size: 15px; /* Slightly smaller for detailed act info */
+            margin: 0;
+            line-height: 1.2;
+            color: black; /* Added maroon color as requested */
+        }
+        .certificate-main-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.1;
+            text-align: center;
+            padding: 5px 0; /* Add padding for better visual spacing */
+            color: maroon; /* Added color: red as requested */
+        }
+        .bold {
+            font-weight: bold;
+        }
+
+        /* --- Line Separators --- */
+        .single-line {
+            border-top: 1px solid #000;
+            margin: 1px 0;
+        }
+        .double-line {
+            border-top: 2px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 1px 0;
+            margin: 8px 0;
+        }
+
+        /* --- Main Content Section (key-value pairs) --- */
+        .main-content {
+            margin-top: 15px;
+            font-size: 14px; /* Adjusted to match PDF closer */
+        }
+        .main-content p {
+            margin: 0;
+            padding: 5px 0;
+            display: flex;
+            align-items: baseline; /* Align values with labels */
+        }
+        .main-content .label {
+            flex: 0 0 140px; /* Adjusted fixed width for Marathi labels */
+            text-align: left;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+        .main-content .colon {
+             padding: 0 5px;
+             font-weight: bold;
+        }
+        .main-content .value {
+            flex: 1;
+            padding-bottom: 2px;
+            text-align: left;
+            min-height: 1.5em; /* Ensure value field has a minimum height even if empty */
+        }
+
+        /* --- Lokseva Hukku Aayog Section --- */
+        .lokseva-section {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .lokseva-section .title {
+            font-weight: bold;
+            font-size: 13px; /* Adjusted font size */
+            margin-bottom: 5px;
+        }
+        .lokseva-section .license-barcode {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 5px;
+            display: block; /* Ensures it takes full width for centering */
+        }
+        .lokseva-section .permission-text {
+            text-align: justify;
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* --- Tables --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 11.5px; /* Adjusted for table content */
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+            vertical-align: top; /* Align content to the top in cells */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center; /* Center table headers */
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light stripe for readability */
+        }
+
+        /* --- Terms and Conditions --- */
+        .terms-conditions {
+            margin-top: 20px;
+            font-size: 12px;
+             color: red;
+        }
+        .terms-conditions ol {
+            padding-left: 20px;
+            margin: 0;
+            list-style-position: inside; /* Numbers stay inside padding */
+        }
+        .terms-conditions li {
+            margin-bottom: 5px;
+            text-align: justify;
+            text-indent: -1.5em; /* Indent for list numbers */
+            padding-left: 1.5em; /* Counteracts text-indent */
+        }
+
+        /* --- Footer --- */
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end; /* Align items to the bottom */
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .footer-left p, .footer-right p {
+            margin: 0;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="certificate-box">
+    <div class="top-most-row">
+        <div class="top-left-place">
+            <p>भिवंडी, जि. ठाणे</p>
+        </div>
+        <div class="top-right-details">
+            <!-- No content here in the provided PDF sample -->
+        </div>
+    </div>
+
+    <div class="header-section">
+        <div class="header-left">
+            {{!-- ULB Logo (from database) - Now on left --}}
+            {{#if ulbLogoFromService}}
+                <img src="{{ulbLogoFromService}}" alt="{{corporationName}} लोगो" class="logo">
+            {{/if}}
+        </div>
+        <div class="header-center">
+            <p class="ulb-place-top">{{corporationName}}</p>
+            <div class="single-line"></div> <!-- Moved here -->
+            <p class="dept-name">परवाना विभाग</p>
+            <p class="act-details">(महाराष्ट्र प्रांतिक महानगरपालिका अधिनियम १९४९ चे कलम ३१३,३७६,३७७ ३८६ अंतर्गत)</p>
+        </div>
+        <div class="header-right">
+            {{!-- Left Logo (Lokseva Hukku Aayog logo from local file) - Now on right --}}
+            {{#if rightToPublicServiceLogoUri}}
+                <img src="{{rightToPublicServiceLogoUri}}" alt="लोकसेवा हक्क आयोग लोगो" class="logo">
+            {{/if}}
+        </div>
+    </div>
+
+    
+    <p class="certificate-main-title">अनुज्ञप्ती</p>
+ 
+
+    <div class="main-content">
+        <p>
+           <span class="label">अनुज्ञप्ती क्रमांक</span><span class="colon">:</span>
+           <span class="value">{{licenseNo}}</span>
+        </p>
+
+        <p>
+            <span class="label">प्रतिष्ठानाचे नाव</span><span class="colon">:</span>
+            <span class="value">{{shopName}}</span>
+        </p>
+        <p>
+            <span class="label">दूरध्वनी क्रमांक</span><span class="colon">:</span>
+            <span class="value">{{contactNo}}</span>
+        </p>
+        <p>
+            <span class="label">व्यवसायाचा पत्ता</span><span class="colon">:</span>
+            <span class="value">{{address}}</span>
+        </p>
+        <p>
+            <span class="label">व्यापार श्रेणी</span><span class="colon">:</span>
+            <span class="value">{{shopTypes}}</span>
+        </p>
+        <p>
+            <span class="label">व्यवसायाचे प्रकार</span><span class="colon">:</span>
+            <span class="value">{{tradeName}}</span>
+        </p>
+    </div>
+
+    <div class="lokseva-section">
+        <p class="permission-text">
+            अनुज्ञप्ती धारकाचे नियमानुसार निर्धारित अनुज्ञप्ती शुल्क भरल्यावरून, महाराष्ट्र प्रांतिक महानगरपालिका अधिनियमातील
+            तरतुदींना अधीन राहून उपरोक्त व्यवसायाकरिता <strong>{{formatDate validFrom}}</strong> दिनांक पासून ते <strong>{{formatDate validTill}}</strong> दिनांक पर्यंत च्या कालावधी
+            करिता परवानगी देण्यात येते.
+        </p>
+    </div>
+
+    <table style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>अनु.क्र.</th>
+                <th>नूतनीकरणाचे वर्ष</th>
+                <th>देय दिनांक</th>
+                <th>रक्कम (पेमेन्ट गेटवेचे शुल्क वगळून)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- This table assumes a single primary renewal entry from certificateDetails or licenseHistory[0] --}}
+            {{#if validFrom}} {{!-- Check if validFrom is provided --}}
+            <tr>
+                <td>1</td>
+                <td>{{formatDate validFrom}}<br>{{formatDate validTill}}</td>
+                <td>{{formatDate amountPaidDate}}</td>
+                <td>{{amountPaid}}</td>
+            </tr>
+            {{else}}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {{/if}}
+        </tbody>
+    </table>
+
+    <table style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>संचालकाचे नाव</th>
+                <th>पत्ता</th>
+                <th>लिंग</th>
+                <th>संचालकाचे प्रकार</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- This table displays director details. Prioritize sanchalakName if available, else iterate directorDetails array --}}
+            {{#if sanchalakName}}
+            <tr>
+                <td>{{sanchalakName}}</td>
+                <td>{{sanchalakAddress}}</td>
+                <td>{{gender}}</td>
+                <td>{{sanchalakType}}</td>
+            </tr>
+            {{else}}
+                {{#each directorDetails}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.address}}</td>
+                    <td>{{this.gender}}</td>
+                    <td>{{this.type}}</td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {{/each}}
+            {{/if}}
+        </tbody>
+    </table>
+
+    <div class="terms-conditions">
+        <ol>
+            <li>अनुज्ञप्ती व्यवसायाचे ठिकाणी दर्शनी भागावार लावली पाहिजे आणि म.न.पा अधिकारीला मागणी केल्यावर ती दाखवली पाहिजे.</li>
+            <li>नूतनीकरणाचे वेळी हि अनुज्ञप्ती सादर करणे बंधनकारक आणि अनुज्ञप्ती नुतनीकरण दरवर्षी एप्रिल महिन्यात करणे आवश्यक आहे.</li>
+            <li>व्यवसाय बंद केल्यास महानगरपालिकेलस ३० दिवसात लेखी स्वरुपात कळविणे बंधनकारक आणि अर्जासोबत हि अनुज्ञप्ती जमा करावी लागेल.</li>
+            <li>दुकानाची मालकी / भोगवाटदार बदल्यास महानगरपालिकेला सूचित करावी आणि त्याची आगावू सूचना द्यावी.</li>
+            <li>मुदतीचे आत नूतनीकरण न केल्यास दंड आकरण्यात येईल, परवाना नूतनीकरण न केलेस परवाना रद्द समजण्यात येईल.</li>
+            <li>सदरच्या व्यवसायामुळे शेजारील नागरिकांची कोणत्याही प्रकारचे हरकत अगर तक्रार असल्यास व्यवसाय बंद करणे बंधनकारक आहे.</li>
+            <li>अन्न व औषध प्रशासन तसेच शासनाच्या संबंधित कडून परवानगी घेणे बंधनकारक राहील, आणि संबंधित व्यवसायास आवश्यक असल्यास सक्षम पोलीस
+                खातेकडील योग्य ती परवानगी घेणे बंधनकारक आहे.</li>
+            <li>नियोजीत व्यवसाय मिळकतीचे विकासाबाबात महाराष्ट्र महानगरपालिका अधिनियम एम.आर.टी.पी अधिनियम १९६६ तरतूदी आपणावर बंधनकारक
+                राहतील, आणि दाट वस्तीच्या कारणामुळे सदरचा व्यवसाय बंद करणेबात महानगरपालिकेने तुम्हांस कळविल्यास सदरचा व्यवसाय बंद करणे बंधनकारक
+                आहे.</li>
+            <li>सदर व्यवसाय शासनाने ठरविलेल्या वेळेत बंद ठेवणेचा आहे. तसेच कायदेशिर बाबी निर्माण झाल्यास त्याची जबाबदारी सर्वस्वी अर्जदाराची राहील. व
+                वरील सर्व अटी खेरीज कोणतेही कारण न देता सदरचा परवाना रद्द करणेचा अधिकार महानगरपालिकेने राखुन ठेवलेला आहे.</li>
+        </ol>
+    </div>
+
+    <div class="footer-section">
+        <div class="footer-left">
+            <p>जावक क्र :- {{jawakNo}}</p>
+            <p>{{formatDate formattedCurrentDate}}</p>
+        </div>
+        <div class="footer-right">
+            <p>सहाय्यक आयुक्त</p>
+            <p>परवाना विभाग</p>
+            <p>{{corporationName}}</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

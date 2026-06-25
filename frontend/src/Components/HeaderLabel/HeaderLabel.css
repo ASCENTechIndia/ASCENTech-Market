@@ -1,0 +1,11 @@
+/* HeaderLabel.css */
+.headerlabel {
+  /* transform: translateX(-50%);*/
+  font-family: "Inter", sans-serif;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  /* line-height: 34px; */
+  color: #2f6eff !important; /* Blue Color */
+  /* display: flex;
+  align-items: center; */
+}

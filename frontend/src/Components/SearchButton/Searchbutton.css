@@ -1,0 +1,71 @@
+.shodha-button {
+  width: 140px;                      
+  height: 52px;                      
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 23px 92px;
+  gap: 10px;
+  
+  background: radial-gradient(63.11% 63.11% at 31.97% 19.67%, 
+              rgba(255, 255, 255, 0.7) 0%, 
+              rgba(255, 255, 255, 0) 69.79%, 
+              rgba(255, 255, 255, 0) 100%), 
+              #2F6EFF;
+              
+  box-shadow: 7px 6px 24.3px rgba(0, 0, 0, 0.2), 
+              inset -3px -4px 7px rgba(255, 255, 255, 0.15);
+              
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14.2px;
+  line-height: 17px;
+  color: #FFFFFF;
+  text-align: center;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  transition: 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.shodha-button:hover {
+  background: #1D4ED8;
+  transform: scale(1.05);
+}
+
+/* Active Effect (Click) */
+.shodha-button:active {
+  background: #0038A8;
+  transform: scale(0.98);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .shodha-button {
+    width: 120px;   
+    height: 45px;
+    padding: 20px 80px;                
+  }
+}
+
+@media (max-width: 768px) {
+  .shodha-button {
+    width: 100px;
+    height: 40px;
+    padding: 15px 60px;
+    font-size: 12px;                  
+  }
+}
+
+@media (max-width: 480px) {
+  .shodha-button {
+    width: 90px;
+    height: 35px;
+    padding: 12px 50px;
+    font-size: 11px;
+  }
+}

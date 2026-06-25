@@ -1,0 +1,68 @@
+/* Navbar Text Styling */
+.navbar-text {
+  display: flex;
+  flex-direction: column;
+
+  width: 160px;
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* First line of text (Title) */
+.navbar-text1 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+  margin-bottom: 5px; /* Space between first and second text */
+}
+
+/* Second line of text (Subtitle) */
+.navbar-text2 {
+  font-size: 17px;
+  color: #333;
+  text-align: left;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .navbar-text1 {
+    font-size: 20px; /* Slightly reduce font size for medium screens */
+  }
+
+  .navbar-text2 {
+    font-size: 15px; /* Slightly reduce font size for medium screens */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-text {
+    margin-left: 0; /* Remove margin for smaller screens */
+    text-align: center; /* Center-align text for mobile screens */
+    width: 90%;
+  }
+
+  .navbar-text1 {
+    font-size: 18px; /* Reduce font size for small screens */
+  }
+
+  .navbar-text2 {
+    font-size: 14px; /* Reduce font size for small screens */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar-text {
+    width: 100%; /* Full width on mobile */
+    text-align: center; /* Center text */
+  }
+
+  .navbar-text1 {
+    font-size: 20px; /* Further reduce font size for mobile */
+  }
+
+  .navbar-text2 {
+    font-size: 15px; /* Further reduce font size for mobile */
+  }
+}

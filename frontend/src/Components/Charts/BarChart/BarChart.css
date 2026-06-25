@@ -1,0 +1,11 @@
+.bar-chart-container {
+  width: 100%;  /* Full width of the parent container */
+  max-width: 500px; /* Max width */
+  height: 300px; /* Fixed height for the container */
+  margin: auto; /* Center it horizontally */
+}
+
+canvas {
+  width: 50% !important; /* Full width of the container */
+  height: 50% !important; /* Full height of the container */
+}

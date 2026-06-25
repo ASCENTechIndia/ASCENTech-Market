@@ -1,0 +1,31 @@
+/* Basic styling for the link button */
+.link-button {
+  text-align: center;
+  font-weight: 500;
+  text-decoration: none; /* Remove underline for the link */
+  color: #024d9e; /* Dark text color */
+  border: none;
+  background: none;
+}
+
+.link-button:hover {
+  color: #4689cf; /* Light text color on hover */
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.link-button.disabled {
+  background-color: #c6c8ca;
+  cursor: not-allowed;
+  color: #6c757d;
+}
+
+.btn-link {
+  text-decoration: none;
+  color: inherit;
+}

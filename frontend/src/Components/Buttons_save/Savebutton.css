@@ -1,0 +1,100 @@
+.save-button {
+  height: 40px;
+  background: #2f6eff;
+  box-shadow: 10px 12px 24.3px rgba(0, 0, 0, 0.2),
+    inset -3px -4px 7px rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  /* position: relative;  */
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 689px;
+  height: 58px;
+  margin: auto;
+  /* position: absolute; */
+  /* top: 1701px; */
+  /* left: calc(50% - 689px/2 + 0.5px); */
+}
+
+.button1 {
+  order: 1;
+}
+
+.button2 {
+  order: 2;
+}
+
+.button3 {
+  order: 3;
+}
+.save-button a {
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .save-button {
+    width: 100px; /* Adjust width for smaller screens */
+    height: 35px; /* Adjust height */
+    font-size: 13px; /* Adjust font size */
+  }
+
+  .button-container {
+    width: 500px; /* Adjust button container width */
+    top: 1600px; /* Adjust vertical position */
+  }
+}
+
+@media (max-width: 768px) {
+  .save-button {
+    width: 100px; /* Further adjust width for tablets */
+    height: 35px; /* Further adjust height */
+    font-size: 12px; /* Further adjust font size */
+  }
+
+  .button-container {
+    width: 400px; /* Further adjust button container width */
+    top: 1400px; /* Adjust vertical position */
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+  }
+
+  .button1,
+  .button2,
+  .button3 {
+    margin-bottom: 10px; /* Add margin between stacked buttons */
+  }
+}
+
+@media (max-width: 480px) {
+  .save-button {
+    width: 100px; /* Further adjust width for mobile screens */
+    height: 35px; /* Further adjust height */
+    font-size: 11px; /* Adjust font size */
+  }
+
+  .button-container {
+    width: 320px; /* Further adjust button container width */
+    top: 1200px; /* Adjust vertical position */
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+  }
+
+  .button1,
+  .button2,
+  .button3 {
+    margin-bottom: 8px; /* Reduce margin between stacked buttons */
+  }
+}

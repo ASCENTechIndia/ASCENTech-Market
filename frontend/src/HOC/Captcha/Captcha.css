@@ -1,0 +1,125 @@
+/* Captcha Container */
+.captcha-container {
+  width: 100%;
+  max-width: 360px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.15); /* Semi-transparent background */
+  border-radius: 12px;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  backdrop-filter: blur(8px); /* Frosted glass effect */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Captcha Box */
+.captcha_box {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Captcha Display (Disabled Input) */
+.captcha-display {
+  width: 80%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 6px;
+  border-radius: 5px;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+  letter-spacing: 3px;
+  background-color: white;
+
+  color: black;
+  user-select: none; /* Prevents text selection */
+}
+.captcha-display span:nth-child(odd) {
+  transform: translateY(-5px) rotate(-10deg);
+}
+
+.captcha-display span:nth-child(even) {
+  transform: translateY(5px) rotate(10deg);
+}
+
+/* Refresh Button */
+.refresh_button {
+  background: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 5px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refresh_button:hover {
+  background: #0056b3;
+}
+
+/* Captcha Input */
+.captcha-input {
+  flex-grow: 1;
+  padding: 8px;
+  width: 100%;
+  max-width: 230px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+  text-align: center;
+}
+
+.captcha-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .captcha-container {
+    max-width: 100%; /* Adjust width to fit smaller screens */
+    padding: 10px;
+  }
+
+  .captcha_box {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    align-items: center;
+  }
+
+  .captcha-display {
+    font-size: 16px; /* Reduce font size for better readability */
+    width: 100px; /* Slightly increase width on smaller screens */
+  }
+
+  .refresh_button {
+    font-size: 12px; /* Reduce button size */
+    padding: 6px;
+  }
+
+  .captcha-input {
+    max-width: 120px; /* Reduce input width */
+    font-size: 13px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .captcha-display {
+    font-size: 14px;
+    width: 90px; /* Adjust width for very small screens */
+  }
+
+  .captcha-input {
+    max-width: 100px; /* Further reduce input width */
+    font-size: 12px;
+  }
+
+  .refresh_button {
+    font-size: 11px;
+    padding: 5px;
+  }
+}

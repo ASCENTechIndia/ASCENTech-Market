@@ -1,0 +1,27 @@
+/* Login Card Responsive Styling */
+@media (max-width: 1024px) {
+  .Card {
+    max-width: 400px;
+    min-height: 400px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .Card {
+    max-width: 350px;
+    min-height: 380px;
+    padding: 8px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Card {
+    max-width: 90%;
+    min-height: 350px;
+    padding: 5px;
+    border-radius: 15px;
+    box-shadow: none; /* Reduce shadow for small screens */
+  }
+}

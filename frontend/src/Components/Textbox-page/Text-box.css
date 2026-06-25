@@ -1,0 +1,49 @@
+.textbox {
+  width: 300px;
+  height: 41px;
+  background: #eeeeee;
+  border-radius: 8.07781px;
+  border: 0px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  padding: 12px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .textbox-container {
+    left: 20px; /* Adjust left position for tablets */
+    top: 300px; /* Adjust top position for tablets */
+    width: 80%; /* Make the container fluid */
+  }
+
+  .textbox {
+    font-size: 14px; /* Smaller font size for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .textbox-container {
+    left: 10px; /* Further adjust for smaller screens */
+    top: 250px; /* Further adjust the top position */
+    width: 90%; /* Wider container */
+  }
+
+  .textbox {
+    font-size: 12px; /* Even smaller font size */
+  }
+}
+
+@media (max-width: 480px) {
+  .textbox-container {
+    left: 5px; /* Fine-tune the left position */
+    top: 200px; /* Adjust top for very small screens */
+    width: 100%; /* Full width */
+  }
+
+  .textbox {
+    font-size: 12px; /* Maintain the smaller font size */
+  }
+}

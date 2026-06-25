@@ -1,0 +1,70 @@
+.text-box-container {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  align-items: flex-start;
+  margin: 20px 20px 0 60px;
+}
+
+.text-box-label {
+  font-family: "Gilroy-Medium";
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: black;
+  text-align: left;
+}
+
+.text-box-input-container {
+  display: flex;
+  width: 90%;
+  background: #ffffff;
+  border-radius: 6px;
+  /* padding: 4px; */
+}
+
+.text-box-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 20px;
+  color: black;
+  padding: 3px;
+}
+
+.text-box-input::placeholder {
+  color: inherit;
+  font-size: 13px;
+  color: #333333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .text-box-container {
+    width: 100%; /* Use almost full width for smaller screens */
+    margin: 0px;
+  }
+
+  .text-box-label {
+    font-size: 1rem; /* Reduce font size on small screens */
+  }
+
+  .text-box-input-container {
+    width: 100%; /* Full width for better usability */
+  }
+
+  .text-box-input {
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .text-box-label {
+    font-size: 0.9rem; /* Even smaller font on very small screens */
+  }
+
+  .text-box-input {
+    font-size: 0.8rem;
+    padding-left: 10px; /* Reduce padding for small screens */
+  }
+}

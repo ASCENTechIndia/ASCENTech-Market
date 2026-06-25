@@ -1,0 +1,21 @@
+.doughnut-chart-container {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+  }
+  
+  /* Make chart responsive on smaller screens */
+  @media (max-width: 768px) {
+    .doughnut-chart-container {
+      width: 250px;
+      height: 250px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .doughnut-chart-container {
+      width: 200px;
+      height: 200px;
+    }
+  }
+  

@@ -1,0 +1,65 @@
+/* Ensure the button adapts to different screen sizes while keeping existing styles */
+.custom-button {
+
+  height: auto; /* Allow the height to adjust naturally */
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #2f6eff;
+  box-shadow: 0.5em 0.5em 1em rgba(0, 0, 0, 0.2),
+    inset -0.15em -0.2em 0.3em rgba(255, 255, 255, 0.15);
+  border-radius: 1.25em;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: "Gilroy-Bold", sans-serif;
+  font-size: 1.2rem;
+  text-shadow: 0.05em 0.05em 0.05em rgba(0, 0, 0, 0.25);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover and Active Effects */
+.custom-button:hover {
+  background-color: #1e5eff;
+  transform: scale(1.05);
+}
+
+.custom-button:active {
+  transform: scale(0.95);
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 1024px) {
+  .custom-button {
+    max-width: 280px;
+    font-size: 1.1rem;
+    padding: 14px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .custom-button {
+    max-width: 50%;
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .custom-button {
+    max-width: 50%;
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .custom-button {
+    max-width: 50%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}

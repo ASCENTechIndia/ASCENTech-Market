@@ -1,0 +1,58 @@
+/* User Icon Container Styling */
+.user-icon-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; /* Ensure the icon is centered horizontally */
+  width: 24px;
+  height: 24px;
+}
+
+/* User Icon Styling */
+.user-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #6D8493; /* Blue Gray-500 */
+  border-radius: 50%;
+  background-color: #6D8493; /* Blue Gray-500 */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .user-icon-container {
+    width: 36px;  /* Increase size for medium screens */
+    height: 36px;
+  }
+
+  .user-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-icon-container {
+    width: 48px;  /* Further increase for smaller screens */
+    height: 48px;
+  }
+
+  .user-icon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-icon-container {
+    width: 60px;  /* Further increase for mobile */
+    height: 60px;
+  }
+
+  .user-icon {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,0 +1,70 @@
+/* Email ID Input Field */
+.input-field {
+    position: absolute;
+    width: 278px;    /* Default width */
+    height: 51px;    /* Default height */
+    left: 180px;     /* Default position from the left */
+    top: 286px;      /* Default position from the top */
+    background: #EEEEEE;
+    border-radius: 8.07781px;
+    border: none;
+    box-sizing: border-box;  /* Ensure padding/borders are included in width/height */
+  }
+  
+  /* Placeholder Text */
+  .input-field::placeholder {
+    position: absolute;
+    width: 137.3px;      /* Default width */
+    height: 17px;        /* Default height */
+    left: 202.54px;      /* Position from the left */
+    top: 300.47px;       /* Position from the top */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14.1362px; /* Default font size */
+    line-height: 17px;   /* Default line height */
+    color: #555555;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 1024px) {
+    .input-field {
+      width: 90%;       /* Take up more space on tablets */
+      left: 5%;         /* Center on screen */
+      top: 250px;       /* Adjust top position */
+      height: 45px;     /* Slightly reduced height for smaller screens */
+    }
+  
+    .input-field::placeholder {
+      width: 90%;       /* Ensure placeholder text is responsive */
+      left: 5%;         /* Adjust left position */
+      font-size: 13px;  /* Smaller font size for tablets */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .input-field {
+      width: 85%;       /* Take up more space on smaller tablets */
+      left: 7.5%;       /* Center it horizontally */
+      top: 230px;       /* Adjust top position */
+      height: 40px;     /* Further reduce height for better fit */
+    }
+  
+    .input-field::placeholder {
+      font-size: 12px;  /* Adjust font size for mobile devices */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .input-field {
+      width: 100%;      /* Full width on mobile */
+      left: 0;          /* Align to the left edge */
+      top: 200px;       /* Adjust top position */
+      height: 40px;     /* Ensure consistent height for mobile */
+    }
+  
+    .input-field::placeholder {
+      font-size: 12px;  /* Keep font size smaller for mobile */
+    }
+  }
+  

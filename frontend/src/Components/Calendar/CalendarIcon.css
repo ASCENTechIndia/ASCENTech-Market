@@ -1,0 +1,44 @@
+.calendar-icon-container {
+  
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 300px; /* Adjust width as needed */
+}
+
+.textbox {
+
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding-right: 35px; /* Ensure text doesn’t overlap with icon */
+}
+
+.calendar-icon {
+  position: absolute;
+  right:10px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.calendar-icon img {
+  width: 20px; /* Adjust icon size */
+  height: 20px;
+}
+
+.datepicker-modal {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 100;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.form-control{
+  background: rgb(236, 236, 236);
+}

@@ -1,0 +1,97 @@
+/* Wrapper for each input field */
+.input-field-wrapper {
+  position: relative; /* Keeps input and dropdown aligned properly */
+  width: 100%; /* Ensure the wrapper adjusts with screen size */
+
+  /* Spacing between elements */
+}
+
+/* Common styling for both dropdown and text input */
+.input-dropdown,
+.input-field {
+  width: 100%;
+  height: 50px;
+  background: #eeeeee;
+  border-radius: 8.07781px; /* Figma style border-radius */
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  color: #555555;
+  box-sizing: border-box; /* Prevents width issues due to padding */
+  padding-right: 40px; /* Ensure space for the icon */
+}
+
+/* Custom Dropdown Arrow (Bootstrap Icon) */
+.input-field-wrapper .dropdown-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #333;
+  font-size: 16px;
+  pointer-events: none; /* Ensures it doesn't interfere with clicks */
+}
+
+/* Ensures focus styles are applied */
+.input-dropdown:focus,
+.input-field:focus {
+  outline: none;
+  background-color: #f5f5f5;
+}
+
+/* Container for password input to properly align icon */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Password visibility toggle icon */
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 55px; /* Position inside input field */
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .input-field-wrapper {
+    max-width: 400px; /* Slightly smaller width for tablets */
+    margin-bottom: 18px; /* Adjust spacing for smaller screens */
+  }
+
+  .input-dropdown,
+  .input-field {
+    font-size: 13px; /* Smaller font for tablets */
+    height: 48px; /* Slightly reduced height for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .input-field-wrapper {
+    max-width: 360px; /* Reduce width further for smaller tablets */
+    margin-bottom: 16px; /* Adjust spacing */
+  }
+
+  .input-dropdown,
+  .input-field {
+    font-size: 12px; /* Even smaller font size for mobile */
+    height: 45px; /* Further reduce height */
+  }
+}
+
+@media (max-width: 480px) {
+  .input-field-wrapper {
+    max-width: 100%; /* Full width for small screens */
+    margin-bottom: 14px; /* Adjust spacing */
+  }
+
+  .input-dropdown,
+  .input-field {
+    font-size: 12px; /* Maintain small font size for mobile */
+    height: 40px; /* Even smaller height for mobile */
+  }
+}

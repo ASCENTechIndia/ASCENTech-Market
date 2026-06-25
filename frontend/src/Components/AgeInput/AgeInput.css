@@ -1,0 +1,26 @@
+.age-container {
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.age-field {
+  width: 50px; /* Small size */
+  height: 50px; /* Adjusted height */
+  text-align: center;
+  font-size: 14px; /* Smaller font */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .age-field {
+      width: 45px;
+      height: 37px;
+      font-size: 12px;
+  }
+}

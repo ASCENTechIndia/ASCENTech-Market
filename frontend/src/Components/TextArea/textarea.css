@@ -1,0 +1,59 @@
+/* Textarea Container */
+.textarea-container {
+  position: relative;
+  width: 100%;  /* Use full width for better responsiveness */
+  max-width: 600px; /* Limit maximum width for large screens */
+}
+
+/* Textarea Label */
+.textarea-label {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: #f25019;
+  margin-bottom: 8px;
+  display: block; /* Makes sure the label appears above the textarea */
+}
+
+/* Textarea Input */
+.textarea-input {
+  position: relative;
+  width: 100%;  /* Full width to make it responsive */
+  height: auto;
+  background: #eeeeee;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  border: 1px solid #c6cdd5;
+  resize: none;
+  box-sizing: border-box;
+  min-height: 120px; /* Set a minimum height for better UX */
+}
+
+/* Focused Textarea */
+.textarea-input:focus {
+  outline: none;
+  border: 1.5px solid black;
+  background: #fff;  /* Optional: lighter background on focus */
+}
+
+/* Placeholder Styling */
+.textarea-input::placeholder {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #bbb; /* Light color for placeholder text */
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 768px) {
+  .textarea-container {
+    padding: 0 10px; /* Less padding on smaller screens */
+  }
+
+  .textarea-input {
+    width: 100%; /* Ensure textarea takes full width on small screens */
+    font-size: 12px; /* Reduce font size for small screens */
+    min-height: 100px; /* Reduce minimum height */
+  }
+}

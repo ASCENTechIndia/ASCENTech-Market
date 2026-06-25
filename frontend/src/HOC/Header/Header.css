@@ -1,0 +1,12 @@
+.header-content {
+  justify-content: flex-end;
+  gap: 20px;
+  width: 100%; /* Make it full width instead of fixed 1440px */
+  max-width: 1440px; /* Prevents exceeding 1440px */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding-right: 50px;
+  position: relative;
+  margin: 6px 0 6px 0; /* Centers the header on large screens */
+}

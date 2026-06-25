@@ -1,0 +1,27 @@
+/* SearchBox.css */
+.search-box-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px; /* Maximum width */
+  margin: 10px auto; /* Center the container */
+  text-align: left;
+  margin-left: 10px;
+}
+
+.search-box-input {
+  padding-left: 40px;
+  height: 40px; /* Adjust height as needed */
+  width: 70%; /* Ensure the input takes up the full width */
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+}
+
+.search-box-icon {
+  position: absolute;
+  left: 10px;
+  color: #888;
+  font-size: 18px; /* Icon size */
+}

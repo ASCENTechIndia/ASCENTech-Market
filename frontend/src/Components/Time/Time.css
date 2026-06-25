@@ -1,0 +1,53 @@
+/* Time Component Container */
+.time-component {
+  display: flex;
+  flex-direction: column;  /* Stack items vertically */
+  align-items: flex-end;  /* Right-align the text */
+  gap: 6px;  /* Space between login and logout text */
+  width: 100%;
+  max-width: 250px; /* Prevents overflowing */
+  margin-left: auto; /* Pushes it to the right */
+}
+
+/* Last Login & Last Logout Styling */
+.last-login, .last-logout {
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px; /* Figma style */
+  line-height: 100%;
+  text-align: right;
+  color: #58707E;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .time-component {
+    max-width: 200px; /* Adjust width for tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .time-component {
+    text-align: center; /* Center text for smaller screens */
+    align-items: center;
+  }
+
+  .last-login, .last-logout {
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .time-component {
+    max-width: 100%; 
+    /* Full width for mobile */
+  }
+
+  .last-login, .last-logout {
+    font-size: 12px;
+    text-align: center; /* Keep a readable font size */
+  }
+}

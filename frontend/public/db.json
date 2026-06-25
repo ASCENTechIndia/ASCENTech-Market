@@ -1,0 +1,30 @@
+{
+    "chartData": [
+      { "label": "Jan", "data": 10000 },
+      { "label": "Feb", "data": 15000 },
+      { "label": "Mar", "data": 22000 },
+      { "label": "Apr", "data": 28000 },
+      { "label": "May", "data": 35000 },
+      { "label": "Jun", "data": 41000 },
+      { "label": "Jul", "data": 50000 },
+      { "label": "Aug", "data": 58000 },
+      { "label": "Sep", "data": 62000 },
+      { "label": "Oct", "data": 70000 },
+      { "label": "Nov", "data": 78000 },
+      { "label": "Dec", "data": 85000 }
+    ],
+    "schemeReport": {
+      "Jan": { "approved": 80, "rejected": 20 },
+      "Feb": { "approved": 85, "rejected": 15 },
+      "Mar": { "approved": 75, "rejected": 25 },
+      "Apr": { "approved": 90, "rejected": 10 },
+      "May": { "approved": 95, "rejected": 5 },
+      "Jun": { "approved": 88, "rejected": 12 },
+      "Jul": { "approved": 78, "rejected": 22 },
+      "Aug": { "approved": 82, "rejected": 18 },
+      "Sep": { "approved": 85, "rejected": 15 },
+      "Oct": { "approved": 80, "rejected": 20 },
+      "Nov": { "approved": 76, "rejected": 24 },
+      "Dec": { "approved": 89, "rejected": 11 }
+    }
+  }

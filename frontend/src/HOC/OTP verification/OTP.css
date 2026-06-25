@@ -1,0 +1,137 @@
+Center the OTP Box
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 10px; /* Ensure some space for small screens */
+}
+
+/* OTP Box */
+.otp-box {
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Heading */
+.head h2 {
+  font-family: sans-serif;
+  margin-top: 2%;
+  font-size: 1.5rem;
+}
+
+/* OTP Input Fields */
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.otp-inputs input {
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  margin-top: 15px;
+}
+
+.otp-inputs input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+
+/* Heading (OTP Subheading) */
+.head3 {
+  font-size: 1rem;
+  font-family: sans-serif;
+}
+/* 
+
+/* Timer Text */
+.timer-text {
+  margin-top: 28px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Resend Button */
+.resend-btn {
+  background-color: transparent;
+  color: #3b82f6;
+  border: none;
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.resend-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.resend-btn:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .otp-box {
+    padding: 15px;
+    width: 100%;
+    max-width: 280px; /* Smaller OTP box for small devices */
+  }
+
+  .otp-inputs input {
+    width: 35px; /* Reduce input size for mobile */
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .verify-btn {
+    padding: 10px;
+    font-size: 16px;
+    width: 90%; /* Ensure button fits on smaller screens */
+  }
+
+  .timer-text {
+    font-size: 12px;
+  }
+
+  .resend-btn {
+    font-size: 12px;
+  }
+
+  .head h2 {
+    font-size: 1.2rem; /* Adjust font size for headings */
+  }
+}
+
+@media (max-width: 320px) {
+  .otp-inputs input {
+    width: 30px; /* Further reduce input size for ultra-small devices */
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .verify-btn {
+    padding: 8px;
+    font-size: 14px;
+    width: 100%; /* Make the button width full on very small screens */
+  }
+
+  .head h2 {
+    font-size: 1rem; /* Smaller heading on very small screens */
+  }
+}

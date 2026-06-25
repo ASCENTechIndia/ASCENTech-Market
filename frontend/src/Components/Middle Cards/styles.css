@@ -1,0 +1,219 @@
+.cardContainer {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.cardContainer:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.heading {
+  font-weight: 640;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.total-suspended {
+  font-weight: bold;
+  margin-bottom: 10px;
+  max-width: 80%;
+}
+
+.content-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-section {
+  flex: 2;
+  padding: 20px;
+}
+
+.chart-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.chart-container {
+  width: 200px;
+  padding-right: 35px;
+}
+
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Table Styles */
+.Tablebox {
+  width: 50%;
+}
+
+table {
+  width: 80%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+/* 🌐 Responsive Styles */
+@media (max-width: 1024px) {
+  .content-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .chart-section {
+    /* width: 100%; */
+    padding-right: 0;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .chart-container {
+    /* width: 100%; */
+    max-width: 150px;
+    padding-right: 0;
+  }
+
+  .table-section {
+    min-width: 40px;
+  }
+
+  table {
+    width: 90%;
+  }
+  
+  .cardContainer {
+    flex-direction: row;
+
+  }
+  .total-suspended {
+    max-width: 90%;
+  }
+ 
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .table-section,
+  .chart-section {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .chart-container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .Tablebox {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .heading {
+    text-align: center;
+    font-size: 22px;
+    width: 100%;
+  }
+
+  .table-section {
+    width: 100%;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  .chart-legend {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .legend-item {
+    margin: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardContainer {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+
+  .total-suspended {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .chart-legend {
+    margin-top: 5px;
+    align-items: center;
+  }
+
+  .legend-item {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .chart-container {
+    width: 100%;
+    max-width: 180px;
+  }
+
+  table {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 6px;
+  }
+}

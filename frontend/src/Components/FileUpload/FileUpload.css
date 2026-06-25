@@ -1,0 +1,144 @@
+/* File Upload Container */
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Upload Button Box */
+.file-upload-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+  height: 30px;
+  background: #2f6eff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.file-upload-box:hover {
+  background: #1e50d7;
+}
+
+/* Upload Button Text */
+.upload-button {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+
+  font-weight: 500;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+/* Hide Default File Input */
+.hidden-input {
+  display: none;
+}
+
+/* File Info Display */
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 170px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  color: #555555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* No File Selected Text */
+.no-file-text {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+}
+
+/* Cancel Icon (Remove File) */
+.cancel-icon {
+  cursor: pointer;
+  font-size: 14px;
+  color: #000;
+  border: none;
+  background: none;
+  /* margin-left: 6px; */
+}
+
+.cancel-icon:hover {
+  color: red;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .file-upload-container {
+    max-width: 90%;
+    left: 10px; /* Adjust position for smaller screens */
+    top: 1450px; /* Adjust top position */
+  }
+
+  .file-upload-box {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .file-info {
+    max-width: 150px; /* Ensure it fits on smaller screens */
+  }
+
+  .no-file-text {
+    margin-left: 0; /* Adjust margin */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .file-upload-container {
+    flex-direction: column;
+    align-items: flex-start;
+    left: 20px;
+    top: auto;
+    position: relative;
+  }
+
+  .file-upload-box {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .file-info {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .no-file-text {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .file-upload-container {
+    max-width: 100%;
+    left: 10px; /* Adjust left position for mobile */
+  }
+
+  .file-upload-box {
+    padding: 6px 12px; /* Reduce padding for smaller screens */
+  }
+
+  .file-info {
+    font-size: 10px; /* Reduce font size */
+  }
+
+  .upload-button {
+    font-size: 10px; /* Adjust font size */
+  }
+}

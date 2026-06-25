@@ -1,0 +1,122 @@
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center items on smaller screens */
+  gap: 16px;
+  padding: 24px;
+  margin: 0 auto; /* Center alignment */
+  max-width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column; /* Stack elements on smaller screens */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+  gap: 20px;
+}
+
+/* Container for Cards & Charts */
+.card-linechart-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  gap: 40px;
+  height: auto;
+}
+
+.card-linechart-container > div {
+  flex: 1; /* Equal width distribution */
+  min-width: 300px; /* Prevent items from shrinking too much */
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .card-linechart-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  .card-linechart-container > div {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+  }
+
+  .app-container {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    gap: 16px;
+    padding: 12px;
+  }
+
+  .app-container {
+    padding: 12px;
+  }
+
+  .card-linechart-container {
+    gap: 16px;
+  }
+
+  .card-linechart-container > div {
+    width: 100%;
+  }
+}
+
+
+.info-card {
+  border-radius: 15px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background: #fff;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+/* Custom gradients for each card type */
+.icon-wrapper.AppEntry { background: linear-gradient(45deg, #42a5f5, #478ed1); }
+.icon-wrapper.AppVerify { background: linear-gradient(45deg, #66bb6a, #4caf50); }
+.icon-wrapper.Rejected { background: linear-gradient(45deg, #ef5350, #d32f2f); }
+.icon-wrapper.Auth { background: linear-gradient(45deg, #ab47bc, #8e24aa); }
+.icon-wrapper.SiteVisit { background: linear-gradient(45deg, #ffa726, #fb8c00); }
+.icon-wrapper.Payment { background: linear-gradient(45deg, #26a69a, #00897b); }
+.icon-wrapper.CertIssued { background: linear-gradient(45deg, #8d6e63, #5d4037); }
+
+h4 {
+  color: #333;
+}
+
+p {
+  font-size: 0.85rem;
+}

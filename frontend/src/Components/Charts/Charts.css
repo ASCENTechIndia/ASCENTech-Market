@@ -1,0 +1,6 @@
+.chart-container {
+  width: 80%;  /* Adjust width as needed */
+  max-width: 600px;  /* Limit max size */
+  height: 400px; /* Adjust height */
+  margin: auto; /* Center the chart */
+}

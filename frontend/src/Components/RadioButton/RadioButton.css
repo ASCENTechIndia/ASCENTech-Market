@@ -1,0 +1,54 @@
+/* Base styles for the radio button */
+.radio-label {
+  position: relative;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #555555;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1.5rem; /* space between radio options */
+}
+
+/* Hide the native radio input */
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Custom radio button circle */
+.custom-radio {
+  width: 1em;
+  height: 1em;
+  border: 1.5px solid #555555;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 50px; /* Increased gap */
+  transition: border-color 0.3s ease;
+  flex-shrink: 0;
+}
+.radio-gap {
+}
+/* Checked state - inner circle */
+.radio-input:checked + .custom-radio::before {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  background-color: #2f6eff;
+  border-radius: 50%;
+}
+
+/* Hover state */
+.radio-label:hover .custom-radio {
+  border-color: #2f6eff;
+}
+
+/* Focus state */
+.radio-input:focus-visible + .custom-radio {
+  outline: 2px solid #2f6eff;
+}

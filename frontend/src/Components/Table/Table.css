@@ -1,0 +1,225 @@
+/* General Table Container */
+.table-container {
+}
+.certi_change_table {
+  margin: 20px !important;
+  overflow-x: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.table {
+  width: 100%;
+  table-layout: fixed; /* ✅ Forces content to fit in fixed column sizes */
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+
+thead.custom-thead th {
+  /* border: 0px solid #a6a8aa; */
+  background-color: #e9f0ff !important;
+}
+.wrap-text {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Table Header Styling */
+.table-header {
+  min-width: 100px; /* Prevents columns from being too narrow */
+  height: 35px;
+  /* border: 0px solid #a6a8aa; */
+  text-align: center;
+   padding: 4px 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  white-space: normal; /* Prevent text from wrapping */
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Show "..." if text is too long */
+}
+
+/* Table Cell Styling */
+.table-cell {
+  height: 26px;
+  padding: 4px 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  text-align: center;
+  white-space: normal; /* Prevent text from wrapping */
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table-Box {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.table-Box-1 {
+  max-height: 240px;
+  overflow-y: auto;
+}
+/* Table Cell Styling */
+/* .table-cell {
+  min-width: 90px; /* Prevents squishing */
+  /* height: 25px;
+  background: #ffffff; */
+  /* border: 1px solid #a6a8aa; */
+  /* text-align: left;
+  padding: 4px;
+  font-size: 0.9rem;
+
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; */
+/* } */ */
+
+/* Input Fields inside Table */
+.table-input {
+  width: 95%; /* Allows flexibility inside the cell */
+  max-width: 100px;
+  padding: 4px;
+  font-size: 0.85rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Download Button */
+.download-button {
+  /* width: 95%; */
+
+  text-align: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  font-size: 0.7rem;
+  white-space: nowrap; /* Prevents text from wrapping */
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+}
+
+.scrollable-table {
+  max-height: 300px; /* Set fixed height for vertical scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  border: 1px solid #ddd; /* Adds border for better visibility */
+  width: 80%; /* Ensure it fits inside the container */
+}
+
+.scrollable-table table {
+  width: 100%; /* Ensure table takes full container width */
+  /* border-collapse: collapse; */
+  table-layout: fixed; /* Prevent table from expanding */
+}
+
+.scrollable-table th,
+.scrollable-table td {
+  padding: 4px 8px; /* Reduce padding to decrease row height */
+  border: 1px solid #ccc; /* Light border */
+  text-align: left; /* Align text to the left */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+  font-size: 14px; /* Reduce font size slightly */
+}
+
+.scrollable-table thead {
+  position: sticky;
+  top: 0;
+  background: #fff; /* Ensures header remains visible */
+  z-index: 2;
+  border-bottom: 2px solid #ccc; /* Darker border */
+}
+
+/* --- RESPONSIVENESS --- */
+
+/* ✅ For Tablets */
+@media screen and (max-width: 1024px) {
+  .table-header,
+  .table-cell {
+    min-width: 80px;
+    height: 44px;
+    font-size: 0.9rem;
+  }
+
+  .table-container {
+    margin: 15px;
+  }
+}
+
+/* ✅ For Small Tablets & Large Phones */
+@media screen and (max-width: 768px) {
+  .table-header,
+  .table-cell {
+    min-width: 70px;
+    height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .table-container {
+    margin: 10px;
+  }
+
+  .table-header {
+    font-size: 0.9rem;
+  }
+
+  .table-cell {
+    padding: 6px;
+  }
+
+  .table-input {
+    font-size: 0.8rem;
+    max-width: 80px;
+    padding: 2px;
+  }
+
+  .download-button {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+}
+.table-Box {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* ✅ For Mobile Screens */
+@media screen and (max-width: 480px) {
+  .table-container {
+    width: 100%;
+    overflow-x: auto; /* Enables scrolling if needed */
+    margin: 5px;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table-header,
+  .table-cell {
+    min-width: 60px; /* Adjust min-width instead of fixed width */
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .table-input {
+    font-size: 0.75rem;
+    max-width: 70px;
+    padding: 2px;
+  }
+
+  .download-button {
+    font-size: 0.75rem;
+    padding: 3px;
+  }
+}

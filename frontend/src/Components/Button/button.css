@@ -1,0 +1,81 @@
+.shodha-button {
+  /* position: absolute; */
+  width: 100px;                      /* Button width */
+  height: 42px;                      /* Button height */
+  /* left: 479px;                       
+  top: 286px;                         */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 70px;
+  gap: 10px;
+  
+  background: radial-gradient(63.11% 63.11% at 31.97% 19.67%, 
+              rgba(255, 255, 255, 0.7) 0%, 
+              rgba(255, 255, 255, 0) 69.79%, 
+              rgba(255, 255, 255, 0) 100%), 
+              #2F6EFF;
+              
+  box-shadow: 7px 6px 24.3px rgba(0, 0, 0, 0.2), 
+              inset -3px -4px 7px rgba(255, 255, 255, 0.15);
+              
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14.2px;
+  line-height: 17px;
+  color: #FFFFFF;
+  text-align: center;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  transition: 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.shodha-button:hover {
+  background: #1D4ED8; /* Darker Blue */
+  transform: scale(1.05);
+}
+
+/* Active Effect (Click) */
+.shodha-button:active {
+  background: #0038A8;
+  transform: scale(0.98);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+.shodha-button {
+  width: 120px;                      /* Adjust width for medium-sized screens (tablets) */
+  height: 45px;                      /* Adjust height */
+  left: 50%;                         /* Center the button horizontally */
+  top: 250px;                        /* Adjust top position */
+  padding: 20px 80px;                /* Adjust padding */
+}
+}
+
+@media (max-width: 768px) {
+.shodha-button {
+  width: 100px;                      /* Adjust width for smaller screens (tablets/phones) */
+  height: 40px;                      /* Adjust height */
+  left: 50%;                         /* Center horizontally */
+  top: 220px;                        /* Adjust top position */
+  padding: 15px 60px;                /* Adjust padding */
+  font-size: 12px;                   /* Adjust font size */
+}
+}
+
+@media (max-width: 480px) {
+.shodha-button {
+  width: 90px;                       /* Adjust width for small screens (phones) */
+  height: 35px;                      /* Adjust height */
+  left: 50%;                         /* Center horizontally */
+  top: 200px;                        /* Adjust top position */
+  padding: 12px 50px;                /* Adjust padding */
+  font-size: 11px;                   /* Adjust font size */
+}
+}

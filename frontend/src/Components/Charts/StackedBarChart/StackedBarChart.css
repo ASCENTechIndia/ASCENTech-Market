@@ -1,0 +1,30 @@
+.stacked-bar-chart-container {
+  width: 80%;  /* Set width to 80% for responsiveness */
+  height: 150px;  /* Set a fixed height */
+  max-width: 250px;  /* Max width of the chart */
+  margin: auto;  /* Center the chart */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stacked-bar-chart-container h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Media query for small screen sizes */
+@media (max-width: 768px) {
+  .stacked-bar-chart-container {
+    width: 90%;  /* Make the chart take up 90% on smaller screens */
+    height: 250px; /* Adjust height for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .stacked-bar-chart-container {
+    width: 100%;  /* Full width on very small screens */
+    height: 200px; /* Adjust height further */
+  }
+}

@@ -1,0 +1,31 @@
+/* Label.css */
+.label {
+  height: 20px;
+  margin-bottom: 8px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .label {
+    left: 20px; /* Adjust the left position for tablets */
+    top: 500px; /* Adjust the top position for better fit */
+    width: 80%; /* Make it more fluid */
+    height: auto; /* Let height adjust according to the content */
+  }
+}
+
+@media (max-width: 768px) {
+  .label {
+    left: 10px; /* Further adjust for smaller screens */
+    top: 450px; /* Further adjust the top position */
+    width: 90%; /* Wider width */
+  }
+}
+
+@media (max-width: 480px) {
+  .label {
+    left: 5px; /* Fine-tune the left position */
+    top: 400px; /* Adjust top for smaller screens */
+    width: 100%; /* Full width */
+  }
+}
