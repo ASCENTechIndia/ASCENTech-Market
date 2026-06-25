@@ -13,13 +13,6 @@ router.post("/site-visit-applications", getSiteVisitApplications);
 
 router.post("/application-verify", siteVisitVerification);
 
-router.post(
-  "/uploadSiteVisitFiles",
-  upload.fields([
-    { name: "visitPhoto", maxCount: 1 },
-    { name: "visitDocument", maxCount: 1 },
-  ]),
-  uploadSiteVisitFiles,
-);
+router.post("/uploadSiteVisitFiles", upload.any(), uploadSiteVisitFiles);
 
 module.exports = router;

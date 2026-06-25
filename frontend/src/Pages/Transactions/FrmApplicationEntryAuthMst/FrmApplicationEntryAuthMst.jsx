@@ -1932,12 +1932,15 @@ const SanchalakMahitiTab = React.forwardRef(
   }
 );
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("API_BASE_URL: ", API_BASE_URL);
+
 const KagadpatraJodaneTab = React.forwardRef(({ applicationId }, ref) => {
   const { translate } = useLanguage();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [documentFiles, setDocumentFiles] = useState({});
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -2033,52 +2036,60 @@ const KagadpatraJodaneTab = React.forwardRef(({ applicationId }, ref) => {
     );
   };
 
-const handleDownload = async (row) => {
-  try {
-    if (!row.fileUrl) {
-      console.warn("KagadpatraJodaneTab: No file URL found for download:", row);
-      alert("फाईल उपलब्ध नाही.");
-      return;
+  const handleDownload = async (row) => {
+    try {
+      if (!row.fileUrl) {
+        console.warn("KagadpatraJodaneTab: No file URL found for download:", row);
+        alert("फाईल उपलब्ध नाही.");
+        return;
+      }
+
+      // Handle relative URLs (e.g. "/uploads/file.pdf")
+      const fullUrl = row.fileUrl.startsWith("http")
+        ? row.fileUrl
+        : `${API_BASE_URL}${row.fileUrl}`;
+
+      // Derive file name properly
+      const fileName = `${row.DOCTYPENAME || "document"}${
+        row.FILETYPE ? row.FILETYPE : ".pdf"
+      }`;
+
+      console.log(`KagadpatraJodaneTab: Downloading file from: ${fullUrl}`);
+
+      // Fetch file as blob
+      const response = await fetch(fullUrl, { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Failed to download file: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Create temp link
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      console.log(`File downloaded successfully: ${fileName}`);
+    } catch (error) {
+      console.error("KagadpatraJodaneTab: Error downloading file:", error);
+      alert("फाईल डाउनलोड करताना त्रुटी आली.");
     }
+  };
 
-    // Handle relative URLs (e.g. "/uploads/file.pdf")
-    const fullUrl = row.fileUrl.startsWith("http")
-      ? row.fileUrl
-      : `${API_BASE_URL}${row.fileUrl}`;
+  const handleFileUpload = (documentId, file) => {
+    setDocumentFiles(prev => ({
+      ...prev,
+      [documentId]: file
+    }));
+  };
 
-    // Derive file name properly
-    const fileName = `${row.DOCTYPENAME || "document"}${
-      row.FILETYPE ? row.FILETYPE : ".pdf"
-    }`;
-
-    console.log(`KagadpatraJodaneTab: Downloading file from: ${fullUrl}`);
-
-    // Fetch file as blob
-    const response = await fetch(fullUrl, { method: "GET" });
-    if (!response.ok) {
-      throw new Error(`Failed to download file: ${response.status}`);
-    }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    // Create temp link
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-
-    // Cleanup
-    link.remove();
-    window.URL.revokeObjectURL(url);
-
-    console.log(`File downloaded successfully: ${fileName}`);
-  } catch (error) {
-    console.error("KagadpatraJodaneTab: Error downloading file:", error);
-    alert("फाईल डाउनलोड करताना त्रुटी आली.");
-  }
-};
 
 
   const tableHeaders = [
@@ -2138,6 +2149,7 @@ const handleDownload = async (row) => {
     getDocumentDetails: () => documents, // Expose the full documents array
     // You might also want to expose a method for validation if there are validation rules for documents
     // isValid: () => { /* Add validation logic here based on documents state */ return true; }
+    getDocumentFiles: () => documentFiles,
   }));
 
   if (loading) {
@@ -2235,6 +2247,8 @@ function FrmApplicationEntryAuthMst() {
       prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
       tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
       selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+
+      console.log("prathmikMahitiValues: ", prathmikMahitiValues);
 
       const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
       if (!prathmikMahitiIsValid) {
@@ -2419,6 +2433,9 @@ function FrmApplicationEntryAuthMst() {
       let selectedTradeIds = [];
       let userPhotoFile = null;
       let userDocumentFile = null;
+      let applicationDocuments = [];
+      let directorsData = [];
+      let documentFiles = {};
 
       if (!prathmikMahitiTabRef.current) {
         alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
@@ -2432,6 +2449,20 @@ function FrmApplicationEntryAuthMst() {
       selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
       userPhotoFile = prathmikMahitiValues.userPhoto;
       userDocumentFile = prathmikMahitiValues.userDocument;
+
+      if (sanchalakMahitiTabRef.current) {
+        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
+      } else {
+        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
+        setKey("sanchalakMahiti");
+        return;
+      }
+
+      if (kagadpatraJodaneTabRef.current) {
+        applicationDocuments = kagadpatraJodaneTabRef.current.getDocumentDetails();
+        documentFiles = kagadpatraJodaneTabRef.current.getDocumentFiles();
+      }
+
 
       console.log("userPhotoFile before validation:", userPhotoFile);
       console.log("prathmikMahitiValues:", prathmikMahitiValues);
@@ -2462,20 +2493,12 @@ function FrmApplicationEntryAuthMst() {
       const In_Applitradetype_Str_Formatted = tradeRateList
         .map((item) => `${item.tradeTypeId}$${item.rate}`)
         .join("#");
+
       const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
 
-      let directorsData = [];
-      if (sanchalakMahitiTabRef.current) {
-        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
-      } else {
-        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
-        setKey("sanchalakMahiti");
-        return;
-      }
-
       const In_Applidirector_Str_Formatted = directorsData
-        .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
-        .join("#");
+      .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
+      .join("#");
 
       const formatToYYYYMMDD = (date) => {
         if (!date) return null;
@@ -2543,7 +2566,7 @@ function FrmApplicationEntryAuthMst() {
         In_siuser: userId, 
         in_PropNo: prathmikMahitiValues.PropertyNo || "",
         in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
-        In_Appstatus: "SP", 
+        In_Appstatus: "A", 
         In_Appstatusremark: "",
       };
 
@@ -2566,49 +2589,105 @@ function FrmApplicationEntryAuthMst() {
         formData.append("applicationNo", applicationNoFromResponse);
         formData.append("ulbId", UlbId);
         formData.append("userId", userId);
+
+        if (applicationDocuments.length > 0) {
+          const docsToUpload = [];
+
+          applicationDocuments.forEach((doc, index) => {
+            const primaryDocId = doc.PRIMARYDOCID || doc.primaryDocId;
+            const file = documentFiles[primaryDocId];
+
+            if (file) {
+              docsToUpload.push({
+                primaryDocId: primaryDocId,
+                docId: doc.DOCID || doc.docId || doc.NUM_APPLIDOC_DOCID,
+                fileType: doc.FILETYPE || doc.fileType || ".pdf",
+                fileField: `document${index}`,
+              });
+
+              formData.append(`document${index}`, file);
+
+              console.log(`Document ${index} attached:`, file.name);
+            }
+          });
+
+          if (docsToUpload.length > 0) {
+            formData.append(
+              "applicationDocuments",
+              JSON.stringify(docsToUpload)
+            );
+          }
+
+          console.log("Documents To Upload:", docsToUpload);
+        }
+
+        if (directorsData.length > 0) {
+          const directorDetails = directorsData.map((d, index) => ({
+            directorId: d.DIRECTORID || d.directorId || (index + 1),
+            imageField: `directorImage${index}`
+          }));
+          formData.append("directorDetails", JSON.stringify(directorDetails));
+          
+          // Append director photos
+          directorsData.forEach((director, index) => {
+            if (director._photoFile || director.imgDirectorImage) {
+              const photoFile = director._photoFile || director.imgDirectorImage;
+              formData.append(`directorImage${index}`, photoFile);
+            }
+          });
+        }
         
         if (userPhotoFile) {
           formData.append("visitPhoto", userPhotoFile);
+          console.log("Photo attached:", userPhotoFile.name, userPhotoFile.size);
         }
         if (userDocumentFile) {
           formData.append("visitDocument", userDocumentFile);
+          console.log(" Document attached:", userDocumentFile.name, userDocumentFile.size);
+        }
+        for (let [key, value] of formData.entries()) {
+          console.log("FormData entry:", key, value instanceof File ? value.name : value);
         }
 
         try {
-          const uploadResponse = await apiService.post(`uploadSiteVisitFiles`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
+          const uploadResponse = await fetch(`${API_BASE_URL}/uploadSiteVisitFiles`, {
+            method: 'POST',
+            body: formData,
           });
+
+          const result = await uploadResponse.json();
+          console.log("Upload Result:", result);
           
-          if (uploadResponse.data && uploadResponse.data.success) {
+          if (result.success) {
             console.log("Site visit files uploaded successfully");
           } else {
-            console.error("File upload failed:", uploadResponse.data?.message);
+            console.error("File upload failed:", result?.message);
           }
         } catch (err) {
           console.error("File upload error:", err);
         }
       }
-         if (directorsData.length > 0 && applicationIdFromResponse) {
-          for (const director of directorsData) {
-            if (director._photoFile) {
-              const formData = new FormData();
-              formData.append("directorid", director.DIRECTORID);
-              formData.append("appid", applicationIdFromResponse);
-              formData.append("imagedata", director._photoFile);
+        // if (directorsData.length > 0 && applicationIdFromResponse) {
+        //   for (const director of directorsData) {
+        //     if (director._photoFile) {
+        //       const formData = new FormData();
+        //       formData.append("directorid", director.DIRECTORID);
+        //       formData.append("appid", applicationIdFromResponse);
+        //       formData.append("imagedata", director._photoFile);
 
-              try {
-                const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
-                  headers: { "Content-Type": "multipart/form-data" },
-                });
-                if (uploadResponse.data && uploadResponse.data.success) {
-                  console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
-                }
-              } catch (err) {
-                console.error("Director photo upload error:", err);
-              }
-            }
-          }
-        }
+        //       try {
+        //         const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
+        //           headers: { "Content-Type": "multipart/form-data" },
+        //         });
+        //         if (uploadResponse.data && uploadResponse.data.success) {
+        //           console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
+        //         }
+        //       } catch (err) {
+        //         console.error("Director photo upload error:", err);
+        //       }
+        //     }
+        //   }
+        // }
 
         alert(translate(successMessage));
         navigate(`/Transaction/FrmApplicationEntryAuthList.aspx`);
@@ -2632,6 +2711,9 @@ function FrmApplicationEntryAuthMst() {
       let prathmikMahitiValues = {};
       let tradeRateList = [];
       let selectedTradeIds = [];
+      let applicationDocuments = [];
+      let directorsData = [];
+      let documentFiles = {};
 
       if (!prathmikMahitiTabRef.current) {
         alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
@@ -2643,6 +2725,23 @@ function FrmApplicationEntryAuthMst() {
       prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
       tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
       selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+
+      if (sanchalakMahitiTabRef.current) {
+        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
+      } else {
+        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
+        setKey("sanchalakMahiti");
+        return;
+      }
+
+      if (kagadpatraJodaneTabRef.current) {
+        applicationDocuments = kagadpatraJodaneTabRef.current.getDocumentDetails();
+        documentFiles = kagadpatraJodaneTabRef.current.getDocumentFiles();
+      }
+
+      console.log("prathmikMahitiValues:", prathmikMahitiValues);
+      console.log("Directors Data:", directorsData);
+      console.log("Application Documents:", applicationDocuments);
 
       const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
       if (!prathmikMahitiIsValid) {
@@ -2656,35 +2755,9 @@ function FrmApplicationEntryAuthMst() {
         .join("#");
       const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
 
-      let directorsData = [];
-      if (sanchalakMahitiTabRef.current) {
-        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
-      } else {
-        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
-        setKey("sanchalakMahiti");
-        return;
-      }
-
       const In_Applidirector_Str_Formatted = directorsData
         .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
         .join("#");
-
-      let documentDetails = [];
-      if (kagadpatraJodaneTabRef.current) {
-        documentDetails = kagadpatraJodaneTabRef.current.getDocumentDetails();
-      }
-
-      let approvalStatus = "A";
-      let rejectionRemark = "";
-      if (approvalFormikRef.current) {
-        approvalStatus = approvalFormikRef.current.values.approvalStatus;
-        rejectionRemark = approvalFormikRef.current.values.rejectionRemark;
-        
-        if (approvalStatus === "R" && !rejectionRemark.trim()) {
-          alert(translate("कृपया रद्द करण्याचे कारण प्रविष्ट करा."));
-          return;
-        }
-      }
 
       const formatToYYYYMMDD = (date) => {
         if (!date) return null;
@@ -2714,6 +2787,18 @@ function FrmApplicationEntryAuthMst() {
 
       const safeNumber = (val) => (val ? Number(val) : 0);
 
+      let approvalStatus = "A";
+      let rejectionRemark = "";
+      if (approvalFormikRef.current) {
+        approvalStatus = approvalFormikRef.current.values.approvalStatus;
+        rejectionRemark = approvalFormikRef.current.values.rejectionRemark;
+        
+        if (approvalStatus === "R" && !rejectionRemark.trim()) {
+          alert(translate("कृपया रद्द करण्याचे कारण प्रविष्ट करा."));
+          return;
+        }
+      }
+
       let appStatus = "";
       let appStatusRemark = "";
       
@@ -2721,7 +2806,7 @@ function FrmApplicationEntryAuthMst() {
         appStatus = "VA"; 
         appStatusRemark = "";
       } else if (approvalStatus === "R") {
-        appStatus = "R";
+        appStatus = "R"; 
         appStatusRemark = rejectionRemark;
       }
 
@@ -2729,7 +2814,7 @@ function FrmApplicationEntryAuthMst() {
         In_UserId: userId,
         In_Appid: safeNumber(applicationId),
         In_AppliNo: storedApplicationNo,
-        In_Mode: 2,
+        In_Mode: 2, 
         In_OldLicencNo: prathmikMahitiValues.licenseNo || "",
         In_ShopName: prathmikMahitiValues.EngShopName,
         In_PANNo: prathmikMahitiValues.PanCard,
@@ -2740,7 +2825,7 @@ function FrmApplicationEntryAuthMst() {
         In_WardId: safeNumber(prathmikMahitiValues.WardNo),
         In_IsProd: prathmikMahitiValues.isItemManufactured === "yes" ? "Y" : "N",
         In_OwnSpace: prathmikMahitiValues.isOwnBrandBusinessNo === "yes" ? "Y" : "N",
-        In_Agrmentwith: prathmikMahitiValues.AggrementType, 
+        In_Agrmentwith: prathmikMahitiValues.AggrementType,
         In_Area: safeNumber(prathmikMahitiValues.UsedArea),
         In_IsCorpNOC: prathmikMahitiValues.NoObjectionCertificate === "yes" ? "Y" : "N",
         In_BusStartYr: safeNumber(prathmikMahitiValues.YearOfCommencement),
@@ -2764,7 +2849,7 @@ function FrmApplicationEntryAuthMst() {
         in_PropNo: prathmikMahitiValues.PropertyNo || "",
         in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
         In_Appstatus: appStatus, 
-        In_Appstatusremark: appStatusRemark,
+        In_Appstatusremark: appStatusRemark, 
       };
 
       console.log("Mode 5 Payload:", finalPayload);
@@ -2776,15 +2861,14 @@ function FrmApplicationEntryAuthMst() {
 
       if (isSuccess) {
         const successMessage = response.data.OUT_ERRORMSG || "Application verified successfully.";
-
         const applicationIdFromResponse = response.data.OUT_APPID || applicationId;
 
         if (directorsData.length > 0 && applicationIdFromResponse) {
           for (const director of directorsData) {
             if (director._photoFile) {
               const formData = new FormData();
-              formData.append("directorid", director.DIRECTORID);
-              formData.append("appid", applicationIdFromResponse);
+              formData.append("directorid", String(director.DIRECTORID));
+              formData.append("appid", String(applicationIdFromResponse));
               formData.append("imagedata", director._photoFile);
 
               try {
@@ -2793,9 +2877,11 @@ function FrmApplicationEntryAuthMst() {
                 });
                 if (uploadResponse.data && uploadResponse.data.success) {
                   console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
+                } else {
+                  console.error(`Director photo upload failed for ${director.DIRCTORNAME}:`, uploadResponse.data?.message);
                 }
               } catch (err) {
-                console.error("Director photo upload error:", err);
+                console.error(`Director photo upload error for ${director.DIRCTORNAME}:`, err);
               }
             }
           }
@@ -2814,7 +2900,6 @@ function FrmApplicationEntryAuthMst() {
       setLoading(false);
     }
   };
-
 
   return (
     <div>
