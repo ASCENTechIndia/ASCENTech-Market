@@ -313,33 +313,32 @@ const uploadSiteVisitFiles = async (req, res) => {
   let connection;
 
   try {
+    const { applicationId, applicationNo, ulbId, userId, directorDetails, applicationDocuments, appStatus, entMode } = req.body;
 
-    const { applicationId, applicationNo, ulbId, userId } = req.body;
+    console.log("Payload:", { applicationId, applicationNo, ulbId, userId, directorDetails, applicationDocuments, appStatus, entMode })
 
-    const visitPhoto = req.files?.visitPhoto?.[0];
-    const visitDocument = req.files?.visitDocument?.[0];
+    const visitPhoto = req.files.find((file) => file.fieldname === "visitPhoto");
+
+    const visitDocument = req.files.find((file) => file.fieldname === "visitDocument");
 
     if (!applicationId || !applicationNo || !ulbId || !userId) {
       return res.status(400).json({
         success: false,
-        message: "applicationId, applicationNo, ulbId and userId are required.",
-      });
-    }
-
-    if (!visitPhoto && !visitDocument) {
-      return res.status(400).json({
-        success: false,
-        message: "Please upload Visit Photo or Visit Document.",
+        message: "Required parameters are missing.",
       });
     }
 
     connection = await getConnection();
 
-    // ==========================
-    // Visit Photo
-    // ==========================
+    // Start Transaction
+    await connection.execute("SAVEPOINT SITE_VISIT_START");
+
+    // ==========================================================
+    // Upload Visit Photo
+    // ==========================================================
+
     if (visitPhoto) {
-      await connection.execute(
+      const result = await connection.execute(
         `
         INSERT INTO aomk_applisitevisit_dtls
         (
@@ -367,7 +366,10 @@ const uploadSiteVisitFiles = async (req, res) => {
         {
           applicationId: Number(applicationId),
           applicationNo,
-          photo: visitPhoto.buffer,
+          photo: {
+            val: visitPhoto.buffer,
+            type: oracledb.BLOB,
+          },
           ulbId: Number(ulbId),
           userId,
         },
@@ -376,14 +378,15 @@ const uploadSiteVisitFiles = async (req, res) => {
         },
       );
 
-      console.log("Visit Photo Uploaded.");
+      console.log("Visit Photo Uploaded. Rows :", result.rowsAffected);
     }
 
-    // ==========================
-    // Visit Document
-    // ==========================
+    // ==========================================================
+    // Upload Visit Document
+    // ==========================================================
+
     if (visitDocument) {
-      await connection.execute(
+      const result = await connection.execute(
         `
         INSERT INTO aomk_applisitevisit_dtls
         (
@@ -411,7 +414,10 @@ const uploadSiteVisitFiles = async (req, res) => {
         {
           applicationId: Number(applicationId),
           applicationNo,
-          document: visitDocument.buffer,
+          document: {
+            val: visitDocument.buffer,
+            type: oracledb.BLOB,
+          },
           ulbId: Number(ulbId),
           userId,
         },
@@ -420,8 +426,156 @@ const uploadSiteVisitFiles = async (req, res) => {
         },
       );
 
-      console.log("Visit Document Uploaded.");
+      console.log("Visit Document Uploaded. Rows :", result.rowsAffected);
     }
+
+    /*
+      Frontend should send
+
+      directorDetails = [
+        {
+          directorId: 1,
+          imageField: "directorImage0"
+        },
+        {
+          directorId: 2,
+          imageField: "directorImage1"
+        }
+      ]
+
+      and upload files
+
+      directorImage0
+      directorImage1
+      ....
+    */
+
+    let directorImageCount = 0;
+
+    let directors = [];
+
+    if (directorDetails) {
+      directors = typeof directorDetails === "string" ? JSON.parse(directorDetails) : directorDetails;
+    }
+
+    for (const director of directors) {
+      const directorFile = req.files.find((file) => file.fieldname === director.imageField);
+
+      if (!directorFile) continue;
+
+      const result = await connection.execute(
+        `
+        UPDATE aomk_applidirector_det
+           SET blo_applitype_photo = :directorPhoto
+         WHERE num_applidirector_id = :directorId
+           AND num_applidirector_appliid = :applicationId
+        `,
+        {
+          directorPhoto: {
+            val: directorFile.buffer,
+            type: oracledb.BLOB,
+          },
+
+          directorId: Number(director.directorId),
+
+          applicationId: Number(applicationId),
+        },
+        {
+          autoCommit: false,
+        },
+      );
+
+      directorImageCount += result.rowsAffected;
+
+      console.log(`Director ${director.directorId} Image Updated`, result.rowsAffected);
+    }
+
+    console.log("Total Director Images Updated : ", directorImageCount);
+
+    // ==========================================================
+    // PART 3 STARTS HERE
+    // Delete Existing Documents
+    // Insert Documents
+    // ==========================================================
+
+    let documents = [];
+
+    if (applicationDocuments) {
+      documents =
+        typeof applicationDocuments === "string"
+          ? JSON.parse(applicationDocuments)
+          : applicationDocuments;
+    }
+
+    // Get only documents whose files are actually uploaded
+    const documentsToUpload = documents.filter((doc) =>
+      req.files.some((file) => file.fieldname === doc.fileField)
+    );
+
+    let documentInsertCount = 0;
+
+    // Delete old documents ONLY when new documents are uploaded
+    if (documentsToUpload.length > 0) {
+      await connection.execute(
+        `
+        DELETE FROM aomk_applidoc_det
+        WHERE num_applidoc_appliid = :applicationId
+        `,
+        {
+          applicationId: Number(applicationId),
+        },
+        {
+          autoCommit: false,
+        }
+      );
+
+      console.log("Existing Documents Deleted");
+    }
+
+    // Insert uploaded documents
+    for (const doc of documentsToUpload) {
+      const uploadedFile = req.files.find(
+        (file) => file.fieldname === doc.fileField
+      );
+
+      const result = await connection.execute(
+        `
+        INSERT INTO aomk_applidoc_det
+        (
+            num_applidoc_id,
+            num_applidoc_appliid,
+            num_applidoc_docid,
+            var_applidoc_doctype,
+            blo_applidoc_image
+        )
+        VALUES
+        (
+            :primaryDocId,
+            :applicationId,
+            :docId,
+            :fileType,
+            :blobFile
+        )
+        `,
+        {
+          primaryDocId: Number(doc.primaryDocId),
+          applicationId: Number(applicationId),
+          docId: Number(doc.docId),
+          fileType: doc.fileType,
+          blobFile: {
+            val: uploadedFile.buffer,
+            type: oracledb.BLOB,
+          },
+        },
+        {
+          autoCommit: false,
+        }
+      );
+
+      documentInsertCount += result.rowsAffected;
+    }
+
+    console.log("Documents Uploaded :", documentInsertCount);
 
     await connection.commit();
 

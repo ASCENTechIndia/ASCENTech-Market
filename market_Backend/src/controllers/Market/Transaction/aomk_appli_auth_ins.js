@@ -47,6 +47,8 @@ const aomk_appli_auth_ins = async (req, res) => {
       in_MarketPropNo
     } = req.body;
 
+    console.log(req.body);
+
     const result = await connection.execute(
       `
       BEGIN
@@ -136,6 +138,8 @@ const aomk_appli_auth_ins = async (req, res) => {
       },
       { autoCommit: true }
     );
+
+    console.log("result", result);
 
     res.json({
       status: "success",
