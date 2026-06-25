@@ -74,6 +74,54 @@ const PrathmikMahitiTab = React.forwardRef(
       LicenseType: "",
     });
 
+    
+    const [visitDocuments, setVisitDocuments] = useState([]);
+    const [loadingVisitDocs, setLoadingVisitDocs] = useState(false);
+    const [userPhoto, setUserPhoto] = useState(null);
+    const [userDocument, setUserDocument] = useState(null);
+
+    // Add this useEffect inside PrathmikMahitiTab component
+    useEffect(() => {
+      const fetchVisitDocuments = async () => {
+        if (!applicationId || !UlbId || mode !== "2") {
+          return;
+        }
+
+        setLoadingVisitDocs(true);
+        try {
+          const response = await apiService.post(`SiteVisitDocuments`, {
+            applicationId: applicationId,
+            ulbId: UlbId
+          });
+
+          console.log("Visit Documents Response:", response.data);
+
+          if (response.data && response.data.success && Array.isArray(response.data.data)) {
+            setVisitDocuments(response.data.data);
+          } else {
+            setVisitDocuments([]);
+          }
+        } catch (error) {
+          console.error("Error fetching visit documents:", error);
+          setVisitDocuments([]);
+        } finally {
+          setLoadingVisitDocs(false);
+        }
+      };
+
+      fetchVisitDocuments();
+    }, [applicationId, UlbId, mode]);
+
+    // Add handleView function
+    const handleViewDocument = (fileUrl) => {
+      if (!fileUrl) {
+        alert("File not available");
+        return;
+      }
+      const fullUrl = fileUrl.startsWith("http") ? fileUrl : `http://localhost:5000${fileUrl}`;
+      window.open(fullUrl, "_blank");
+    };
+
     useEffect(() => {
       const fetchTradeList = async () => {
         try {
@@ -492,6 +540,8 @@ const PrathmikMahitiTab = React.forwardRef(
       // Expose tradeRateList and selectedTradeIds
       getTradeRateList: () => tradeRateList,
       getSelectedTradeIds: () => selectedTradeIds,
+      getUserPhoto: () => userPhoto, 
+      getUserDocument: () => userDocument,
     }));
 
     const In_Applitradetype_Str = tradeRateList
@@ -1148,7 +1198,26 @@ const PrathmikMahitiTab = React.forwardRef(
                     </div>
 
                     <div>
-                      <FileUpload name="userPhoto" />
+                      <FileUpload 
+                        name="userPhoto" 
+                        setFieldValue={setFieldValue}
+                        accept=".jpg,.jpeg,.png"
+                        onChange={(fileOrEvent) => {
+                          const file = fileOrEvent?.target?.files?.[0] || fileOrEvent;
+                          
+                          if (file && file instanceof File) {
+                            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                            if (!validTypes.includes(file.type)) {
+                              alert(translate("कृपया फक्त JPG, JPEG किंवा PNG फोटो अपलोड करा."));
+                              setUserPhoto(null);
+                              setFieldValue("userPhoto", null);
+                              return;
+                            }
+                            setUserPhoto(file);
+                            setFieldValue("userPhoto", file);
+                          }
+                        }}
+                      />
                     </div>
 
                     {/* Image Preview */}
@@ -1193,7 +1262,38 @@ const PrathmikMahitiTab = React.forwardRef(
                     </div>
 
                     <div>
-                      <FileUpload name="userDocument" />
+                      <input
+                        type="file"
+                        id="userDocumentInput"
+                        name="userDocument"
+                        accept=".pdf,application/pdf"
+                        className="form-control"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          
+                          if (file) {
+                            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                            if (!isPDF) {
+                              alert(translate("कृपया फक्त PDF फाइल अपलोड करा."));
+                              e.target.value = ''; 
+                              setUserDocument(null);
+                              setFieldValue("userDocument", null);
+                              return;
+                            }
+                            
+                            if (file.size > 2 * 1024 * 1024) {
+                              alert(translate("PDF फाइलचा आकार 2 MB पेक्षा जास्त नसावा."));
+                              e.target.value = ''; 
+                              setUserDocument(null);
+                              setFieldValue("userDocument", null);
+                              return;
+                            }
+                            
+                            setUserDocument(file);
+                            setFieldValue("userDocument", file);
+                          }
+                        }}
+                      />
                     </div>
 
                     <div>
@@ -1210,6 +1310,42 @@ const PrathmikMahitiTab = React.forwardRef(
                     component="div"
                     className="text-danger mt-1"
                   />
+                </div>
+              </div>
+            )}
+
+            {mode == "2" && (
+              <div className="row mb-3">
+                <div className="col-12">
+                  <div className="table-container mt-2">
+                    <div className="table-Box-1">
+                      {loadingVisitDocs ? (
+                        <p className="text-center">{translate("Loading...")}</p>
+                      ) : visitDocuments.length > 0 ? (
+                        <Table
+                          headers={[
+                            translate("दस्तावेजाचे नांव"),
+                            translate("View")
+                          ]}
+                          data={visitDocuments.map((doc) => ({
+                            [translate("दस्तावेजाचे नांव")]: doc.documentTypeName || "",
+                            [translate("View")]: (
+                              <LinkButton
+                                text={translate("View")}
+                                onClick={() => handleViewDocument(doc.fileUrl)}
+                              />
+                            )
+                          }))}
+                          keyMapping={{
+                            [translate("दस्तावेजाचे नांव")]: translate("दस्तावेजाचे नांव"),
+                            [translate("View")]: translate("View")
+                          }}
+                        />
+                      ) : (
+                        <p className="text-center">{translate("No visit documents found.")}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -2042,7 +2178,7 @@ function FrmApplicationEntryAuthMst() {
   const mode = location.state?.mode
   console.log("Mode : ", mode);
   const { translate } = useLanguage();
-  const [key, setKey] = useState("prathmikMahiti"); // Initial active tab
+  const [key, setKey] = useState("prathmikMahiti");
   const ipAddress = useIP();
   const { user } = useAuth(); // Assuming useAuth provides user object
   const userId = user?.userId;
@@ -2074,208 +2210,612 @@ function FrmApplicationEntryAuthMst() {
 
   const approvalFormikRef = useRef(null);
 
-const handleMainApplicationSubmit = async () => {
-  debugger;
-  setLoading(true);
+  const [fileAppliBytes, setFileAppliBytes] = useState(null); 
+  const [appliDocPdf, setAppliDocPdf] = useState(null);     
+  const [visitDocuments, setVisitDocuments] = useState([]); 
 
-  try {
-    // --- 1. Collect PrathmikMahitiTab data ---
-    let prathmikMahitiValues = {};
-    let tradeRateList = [];
-    let selectedTradeIds = [];
 
-    if (!prathmikMahitiTabRef.current) {
-      alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
-      setKey("prathmikMahiti");
-      return;
-    }
+  const handleMainApplicationSubmit = async () => {
+    debugger;
+    setLoading(true);
 
-    await prathmikMahitiTabRef.current.submit();
-    prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
-    tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
-    selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+    try {
+      // --- 1. Collect PrathmikMahitiTab data ---
+      let prathmikMahitiValues = {};
+      let tradeRateList = [];
+      let selectedTradeIds = [];
 
-    const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
-    if (!prathmikMahitiIsValid) {
-      alert(translate("कृपया 'प्राथमिक माहिती' टॅबमधील त्रुटी दूर करा."));
-      setKey("prathmikMahiti");
-      return;
-    }
-
-    // Format trade strings
-    const In_Applitradetype_Str_Formatted = tradeRateList
-      .map((item) => `${item.tradeTypeId}$${item.rate}`)
-      .join("#");
-    const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
-
-    // --- 2. Collect SanchalakMahitiTab data --- (Remains the same)
-    let directorsData = [];
-    if (sanchalakMahitiTabRef.current) {
-      directorsData = sanchalakMahitiTabRef.current.getDirectorList();
-      if (directorsData.length === 0) {
-        console.warn("Directors list is empty. Check if this is required.");
-      }
-    } else {
-      alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
-      setKey("sanchalakMahiti");
-      return;
-    }
-
-    const In_Applidirector_Str_Formatted = directorsData
-      .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
-      .join("#");
-
-    // --- 3. Collect KagadpatraJodaneTab data --- (Remains the same)
-    let documentDetails = [];
-    if (kagadpatraJodaneTabRef.current) {
-      documentDetails = kagadpatraJodaneTabRef.current.getDocumentDetails();
-    }
-
-    // --- 4. Approval status & remark --- (Remains the same)
-    let approvalStatus = "A";
-    let rejectionRemark = "";
-    if (approvalFormikRef.current) {
-      approvalStatus = approvalFormikRef.current.values.approvalStatus;
-      rejectionRemark = approvalFormikRef.current.values.rejectionRemark;
-      if (approvalStatus === "R" && !rejectionRemark.trim()) {
-        alert(translate("कृपया रद्द करण्याचे कारण प्रविष्ट करा."));
+      if (!prathmikMahitiTabRef.current) {
+        alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
+        setKey("prathmikMahiti");
         return;
       }
-    }
 
-    // --- 5. Format dates and Calculate License Days ---
-    const formatToYYYYMMDD = (date) => {
-      if (!date) return null;
-      if (date instanceof Date) {
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      await prathmikMahitiTabRef.current.submit();
+      prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
+      tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
+      selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+
+      const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
+      if (!prathmikMahitiIsValid) {
+        alert(translate("कृपया 'प्राथमिक माहिती' टॅबमधील त्रुटी दूर करा."));
+        setKey("prathmikMahiti");
+        return;
       }
-      return date;
-    };
 
-    let licenseDays = 0;
-    const startDate = prathmikMahitiValues.fromDate; // Expecting a Date object
-    const endDate = prathmikMahitiValues.toDate;   // Expecting a Date object
-    
-    if (startDate instanceof Date && endDate instanceof Date) {
-        // Calculate the difference in milliseconds
-        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-        // Calculate the difference in days and add 1 to include both start and end dates
-        // 1000ms/s * 60s/min * 60min/hr * 24hr/day = 86400000 ms per day
-        licenseDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        
-        // Handle case where diffTime might be 0 (same day), resulting in 1 day
-        if (licenseDays === 1 && diffTime === 0) {
-            licenseDays = 1;
-        } else if (diffTime > 0) {
-             // For typical license periods (e.g., April 1 to March 31), the difference in days (364) plus 1 day (365) is correct.
-             // We ensure it's not negative or zero if dates are valid.
-        } else {
-            licenseDays = 0;
+      // Format trade strings
+      const In_Applitradetype_Str_Formatted = tradeRateList
+        .map((item) => `${item.tradeTypeId}$${item.rate}`)
+        .join("#");
+      const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
+
+      // --- 2. Collect SanchalakMahitiTab data --- (Remains the same)
+      let directorsData = [];
+      if (sanchalakMahitiTabRef.current) {
+        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
+        if (directorsData.length === 0) {
+          console.warn("Directors list is empty. Check if this is required.");
         }
+      } else {
+        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
+        setKey("sanchalakMahiti");
+        return;
+      }
 
-    } else {
-        // Fallback or warning if dates are not valid Date objects
-        console.warn("Date values are not valid Date objects for license days calculation.");
-        // Use a default value or 0 if dates are missing/invalid.
-        licenseDays = 0; // or a safe default like 365
-    }
+      const In_Applidirector_Str_Formatted = directorsData
+        .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
+        .join("#");
 
-    // --- 6. Prepare payload ---
-    const safeNumber = (val) => (val ? Number(val) : 0);
+      // --- 3. Collect KagadpatraJodaneTab data --- (Remains the same)
+      let documentDetails = [];
+      if (kagadpatraJodaneTabRef.current) {
+        documentDetails = kagadpatraJodaneTabRef.current.getDocumentDetails();
+      }
 
-    const finalPayload = {
-      In_UserId: userId,
-      In_Appid: safeNumber(applicationId),
-      In_AppliNo: storedApplicationNo,
-      In_OldLicencNo: null,
-      In_ShopName: prathmikMahitiValues.EngShopName,
-      In_PANNo: prathmikMahitiValues.PanCard,
-      In_ContactNo: safeNumber(prathmikMahitiValues.ContactNo),
-      In_Email: prathmikMahitiValues.Email,
-      In_Address: prathmikMahitiValues.ShopAddress,
-      In_ZoneId: safeNumber(prathmikMahitiValues.ZoneNo),
-      In_WardId: safeNumber(prathmikMahitiValues.WardNo),
-      In_IsProd: prathmikMahitiValues.isItemManufactured === "yes" ? "Y" : "N",
-      In_OwnSpace: prathmikMahitiValues.isOwnBrandBusinessNo === "OWNER" ? "Y" : "N",
-      In_Agrmentwith: prathmikMahitiValues.OwnerName,
-      In_Area: safeNumber(prathmikMahitiValues.UsedArea),
-      In_IsCorpNOC: prathmikMahitiValues.NoObjectionCertificate === "yes" ? "Y" : "N",
-      In_BusStartYr: safeNumber(prathmikMahitiValues.YearOfCommencement),
-      In_ShopActNo: prathmikMahitiValues.FormNo,
-      In_foodlicno: prathmikMahitiValues.NondaniFormNo || null,
- 
-      In_LicDays: licenseDays,
-      In_Applitrade_Str: In_Applitrade_Str_Formatted,
-      In_Applitradetype_Str: In_Applitradetype_Str_Formatted,
-      In_Applidirector_Str: In_Applidirector_Str_Formatted,
-      In_Source: config.source, // Using config.source as seen in your provided code
-      In_ShopNameMar: prathmikMahitiValues.MarShopName,
-      In_PlaceOwnerName: prathmikMahitiValues.OwnerName,
-      In_PlaceOwnerAddress: prathmikMahitiValues.OwnerAddress,
-      In_FromDate: formatToYYYYMMDD(prathmikMahitiValues.fromDate),
-      In_ToDate: formatToYYYYMMDD(prathmikMahitiValues.toDate),
-      In_Appstatus: approvalStatus,
-      In_Appstatusremark: rejectionRemark,
-      in_amount: safeNumber(prathmikMahitiValues.amount),
-      In_OrgId: safeNumber(UlbId),
-      in_arramount: safeNumber(prathmikMahitiValues.ArrearsAmount),
-      in_ipaddr: ipAddress,
-      in_PropNo: prathmikMahitiValues.PropertyNo || "",
-      in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
-    };
+      let approvalStatus = "A";
+      let rejectionRemark = "";
+      if (approvalFormikRef.current) {
+        approvalStatus = approvalFormikRef.current.values.approvalStatus;
+        rejectionRemark = approvalFormikRef.current.values.rejectionRemark;
+        if (approvalStatus === "R" && !rejectionRemark.trim()) {
+          alert(translate("कृपया रद्द करण्याचे कारण प्रविष्ट करा."));
+          return;
+        }
+      }
 
-    console.log("Final Payload:", finalPayload);
-    console.log(`Calculated In_LicDays: ${licenseDays}`);
+      const formatToYYYYMMDD = (date) => {
+        if (!date) return null;
+        if (date instanceof Date) {
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+        return date;
+      };
 
-    // --- 7. Call API ---
-    const response = await apiService.post(`aomk_appli_auth_ins`, finalPayload);
-    console.log("API Response:", response.data);
+      let licenseDays = 0;
+      const startDate = prathmikMahitiValues.fromDate; 
+      const endDate = prathmikMahitiValues.toDate;   
+      
+      if (startDate instanceof Date && endDate instanceof Date) {
+          const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+          licenseDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+          
+          if (licenseDays === 1 && diffTime === 0) {
+              licenseDays = 1;
+          } else if (diffTime > 0) {
+          } else {
+              licenseDays = 0;
+          }
 
-    // Assuming success is indicated by Out_Errorcode of 9999 or similar
-    const isSuccess = response.data && (response.data.errorCode === 9999 || response.data.Out_Errorcode === 9999);
+      } else {
+          console.warn("Date values are not valid Date objects for license days calculation.");
+    
+          licenseDays = 0; 
+      }
 
-    if (isSuccess) {
-      const successMessage = response.data.message || response.data.Out_Errormsg || "Application submitted successfully.";
-      alert(translate(successMessage));
+      // --- 6. Prepare payload ---
+      const safeNumber = (val) => (val ? Number(val) : 0);
 
-      const submittedApplicationId = applicationId || response.data.appId;
+      const finalPayload = {
+        In_UserId: userId,
+        In_Appid: safeNumber(applicationId),
+        In_AppliNo: storedApplicationNo,
+        In_OldLicencNo: null,
+        In_ShopName: prathmikMahitiValues.EngShopName,
+        In_PANNo: prathmikMahitiValues.PanCard,
+        In_ContactNo: safeNumber(prathmikMahitiValues.ContactNo),
+        In_Email: prathmikMahitiValues.Email,
+        In_Address: prathmikMahitiValues.ShopAddress,
+        In_ZoneId: safeNumber(prathmikMahitiValues.ZoneNo),
+        In_WardId: safeNumber(prathmikMahitiValues.WardNo),
+        In_IsProd: prathmikMahitiValues.isItemManufactured === "yes" ? "Y" : "N",
+        In_OwnSpace: prathmikMahitiValues.isOwnBrandBusinessNo === "OWNER" ? "Y" : "N",
+        In_Agrmentwith: prathmikMahitiValues.OwnerName,
+        In_Area: safeNumber(prathmikMahitiValues.UsedArea),
+        In_IsCorpNOC: prathmikMahitiValues.NoObjectionCertificate === "yes" ? "Y" : "N",
+        In_BusStartYr: safeNumber(prathmikMahitiValues.YearOfCommencement),
+        In_ShopActNo: prathmikMahitiValues.FormNo,
+        In_foodlicno: prathmikMahitiValues.NondaniFormNo || null,
+  
+        In_LicDays: licenseDays,
+        In_Applitrade_Str: In_Applitrade_Str_Formatted,
+        In_Applitradetype_Str: In_Applitradetype_Str_Formatted,
+        In_Applidirector_Str: In_Applidirector_Str_Formatted,
+        In_Source: config.source, // Using config.source as seen in your provided code
+        In_ShopNameMar: prathmikMahitiValues.MarShopName,
+        In_PlaceOwnerName: prathmikMahitiValues.OwnerName,
+        In_PlaceOwnerAddress: prathmikMahitiValues.OwnerAddress,
+        In_FromDate: formatToYYYYMMDD(prathmikMahitiValues.fromDate),
+        In_ToDate: formatToYYYYMMDD(prathmikMahitiValues.toDate),
+        In_Appstatus: approvalStatus,
+        In_Appstatusremark: rejectionRemark,
+        in_amount: safeNumber(prathmikMahitiValues.amount),
+        In_OrgId: safeNumber(UlbId),
+        in_arramount: safeNumber(prathmikMahitiValues.ArrearsAmount),
+        in_ipaddr: ipAddress,
+        in_PropNo: prathmikMahitiValues.PropertyNo || "",
+        in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
+      };
 
-      // Upload director photos (Logic remains the same)
-      if (directorsData.length > 0 && submittedApplicationId) {
-        for (const director of directorsData) {
-          if (director._photoFile) {
-            const formData = new FormData();
-            formData.append("directorid", director.DIRECTORID);
-            formData.append("appid", submittedApplicationId);
-            formData.append("imagedata", director._photoFile);
+      console.log("Final Payload:", finalPayload);
+      console.log(`Calculated In_LicDays: ${licenseDays}`);
 
-            try {
-              const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-              });
-              if (uploadResponse.data && uploadResponse.data.success) {
-                console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
-              } else {
-                console.error(uploadResponse.data?.message || "Director photo upload failed.");
+      // --- 7. Call API ---
+      const response = await apiService.post(`aomk_appli_auth_ins`, finalPayload);
+      console.log("API Response:", response.data);
+
+      // Assuming success is indicated by Out_Errorcode of 9999 or similar
+      const isSuccess = response.data && (response.data.errorCode === 9999 || response.data.Out_Errorcode === 9999);
+
+      if (isSuccess) {
+        const successMessage = response.data.message || response.data.Out_Errormsg || "Application submitted successfully.";
+        alert(translate(successMessage));
+
+        const submittedApplicationId = applicationId || response.data.appId;
+
+        // Upload director photos (Logic remains the same)
+        if (directorsData.length > 0 && submittedApplicationId) {
+          for (const director of directorsData) {
+            if (director._photoFile) {
+              const formData = new FormData();
+              formData.append("directorid", director.DIRECTORID);
+              formData.append("appid", submittedApplicationId);
+              formData.append("imagedata", director._photoFile);
+
+              try {
+                const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
+                  headers: { "Content-Type": "multipart/form-data" },
+                });
+                if (uploadResponse.data && uploadResponse.data.success) {
+                  console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
+                } else {
+                  console.error(uploadResponse.data?.message || "Director photo upload failed.");
+                }
+              } catch (err) {
+                console.error("Director photo upload error:", err);
               }
-            } catch (err) {
-              console.error("Director photo upload error:", err);
             }
           }
         }
+        navigate(`/Transaction/FrmApplicationEntryAuthList.aspx`);
+      } else {
+        const errorMessage = response.data.message || response.data.Out_Errormsg || "An unknown error occurred during submission.";
+        alert(translate(errorMessage));
       }
-      navigate(`/Transaction/FrmApplicationEntryAuthList.aspx`);
-    } else {
-      const errorMessage = response.data.message || response.data.Out_Errormsg || "An unknown error occurred during submission.";
-      alert(translate(errorMessage));
+    } catch (error) {
+      console.error(error);
+      alert(translate(error.response?.data?.message || error.message || "An unexpected error occurred."));
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error(error);
-    alert(translate(error.response?.data?.message || error.message || "An unexpected error occurred."));
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+
+  const handleMode4Submit = async () => {
+    setLoading(true);
+    debugger;
+
+    try {
+      let prathmikMahitiValues = {};
+      let tradeRateList = [];
+      let selectedTradeIds = [];
+      let userPhotoFile = null;
+      let userDocumentFile = null;
+
+      if (!prathmikMahitiTabRef.current) {
+        alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      await prathmikMahitiTabRef.current.submit();
+      prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
+      tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
+      selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+      userPhotoFile = prathmikMahitiValues.userPhoto;
+      userDocumentFile = prathmikMahitiValues.userDocument;
+
+      console.log("userPhotoFile before validation:", userPhotoFile);
+      console.log("prathmikMahitiValues:", prathmikMahitiValues);
+      console.log("userDocumentFile before validation:", userDocumentFile);
+      console.log("userPhotoFile type:", userPhotoFile?.constructor?.name);
+      console.log("userDocumentFile type:", userDocumentFile?.constructor?.name);
+
+
+      if (!userPhotoFile) {
+        alert(translate("कृपया अर्जदाराचा फोटो अपलोड करा."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      if (!userDocumentFile) {
+        alert(translate("कृपया दस्तऐवज अपलोड करा."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
+      if (!prathmikMahitiIsValid) {
+        alert(translate("कृपया 'प्राथमिक माहिती' टॅबमधील त्रुटी दूर करा."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      const In_Applitradetype_Str_Formatted = tradeRateList
+        .map((item) => `${item.tradeTypeId}$${item.rate}`)
+        .join("#");
+      const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
+
+      let directorsData = [];
+      if (sanchalakMahitiTabRef.current) {
+        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
+      } else {
+        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
+        setKey("sanchalakMahiti");
+        return;
+      }
+
+      const In_Applidirector_Str_Formatted = directorsData
+        .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
+        .join("#");
+
+      const formatToYYYYMMDD = (date) => {
+        if (!date) return null;
+        if (date instanceof Date) {
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+        return date;
+      };
+
+      let licenseDays = 0;
+      const startDate = prathmikMahitiValues.fromDate;
+      const endDate = prathmikMahitiValues.toDate;
+      
+      if (startDate instanceof Date && endDate instanceof Date) {
+        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+        licenseDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        if (licenseDays === 1 && diffTime === 0) {
+          licenseDays = 1;
+        } else if (diffTime > 0) {
+        } else {
+          licenseDays = 0;
+        }
+      } else {
+        console.warn("Date values are not valid Date objects for license days calculation.");
+        licenseDays = 0;
+      }
+
+      const safeNumber = (val) => (val ? Number(val) : 0);
+
+      const finalPayload = {
+        In_UserId: userId,
+        In_Appid: safeNumber(applicationId),
+        In_AppliNo: storedApplicationNo,
+        In_Mode: 1, 
+        In_OldLicencNo: prathmikMahitiValues.licenseNo || "",
+        In_ShopName: prathmikMahitiValues.EngShopName,
+        In_PANNo: prathmikMahitiValues.PanCard,
+        In_ContactNo: safeNumber(prathmikMahitiValues.ContactNo),
+        In_Email: prathmikMahitiValues.Email,
+        In_Address: prathmikMahitiValues.ShopAddress,
+        In_ZoneId: safeNumber(prathmikMahitiValues.ZoneNo),
+        In_WardId: safeNumber(prathmikMahitiValues.WardNo),
+        In_IsProd: prathmikMahitiValues.isItemManufactured === "yes" ? "Y" : "N",
+        In_OwnSpace: prathmikMahitiValues.isOwnBrandBusinessNo === "yes" ? "Y" : "N",
+        In_Agrmentwith: prathmikMahitiValues.AggrementType,
+        In_Area: safeNumber(prathmikMahitiValues.UsedArea),
+        In_IsCorpNOC: prathmikMahitiValues.NoObjectionCertificate === "yes" ? "Y" : "N",
+        In_BusStartYr: safeNumber(prathmikMahitiValues.YearOfCommencement),
+        In_ShopActNo: prathmikMahitiValues.FormNo,
+        In_foodlicno: prathmikMahitiValues.NondaniFormNo || null,
+        In_LicDays: licenseDays,
+        In_Applitrade_Str: In_Applitradetype_Str_Formatted,
+        In_Applitradetype_Str: In_Applitradetype_Str_Formatted,
+        In_Applidirector_Str: In_Applidirector_Str_Formatted,
+        In_Source: config.source,
+        In_ShopNameMar: prathmikMahitiValues.MarShopName,
+        In_PlaceOwnerName: prathmikMahitiValues.OwnerName,
+        In_PlaceOwnerAddress: prathmikMahitiValues.OwnerAddress,
+        In_FromDate: formatToYYYYMMDD(prathmikMahitiValues.fromDate),
+        In_ToDate: formatToYYYYMMDD(prathmikMahitiValues.toDate),
+        in_amount: safeNumber(prathmikMahitiValues.amount),
+        In_OrgId: safeNumber(UlbId),
+        In_ArrAmount: safeNumber(prathmikMahitiValues.ArrearsAmount),
+        in_ipaddr: ipAddress,
+        In_siuser: userId, 
+        in_PropNo: prathmikMahitiValues.PropertyNo || "",
+        in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
+        In_Appstatus: "SP", 
+        In_Appstatusremark: "",
+      };
+
+      console.log("Mode 4 Payload:", finalPayload);
+
+      const response = await apiService.post(`application-verify`, finalPayload);
+      console.log("Mode 4 API Response:", response.data);
+
+      const isSuccess = response.data && response.data.OUT_ERRORCODE === 9999;
+
+      if (isSuccess) {
+        const successMessage = response.data.OUT_ERRORMSG || "Site visit details saved successfully.";
+        const applicationIdFromResponse = response.data.OUT_APPID || applicationId;
+        const applicationNoFromResponse = response.data.OUT_APPLINO || storedApplicationNo;
+
+        if (userPhotoFile || userDocumentFile) {
+        const formData = new FormData();
+        
+        formData.append("applicationId", applicationIdFromResponse);
+        formData.append("applicationNo", applicationNoFromResponse);
+        formData.append("ulbId", UlbId);
+        formData.append("userId", userId);
+        
+        if (userPhotoFile) {
+          formData.append("visitPhoto", userPhotoFile);
+        }
+        if (userDocumentFile) {
+          formData.append("visitDocument", userDocumentFile);
+        }
+
+        try {
+          const uploadResponse = await apiService.post(`uploadSiteVisitFiles`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          
+          if (uploadResponse.data && uploadResponse.data.success) {
+            console.log("Site visit files uploaded successfully");
+          } else {
+            console.error("File upload failed:", uploadResponse.data?.message);
+          }
+        } catch (err) {
+          console.error("File upload error:", err);
+        }
+      }
+         if (directorsData.length > 0 && applicationIdFromResponse) {
+          for (const director of directorsData) {
+            if (director._photoFile) {
+              const formData = new FormData();
+              formData.append("directorid", director.DIRECTORID);
+              formData.append("appid", applicationIdFromResponse);
+              formData.append("imagedata", director._photoFile);
+
+              try {
+                const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
+                  headers: { "Content-Type": "multipart/form-data" },
+                });
+                if (uploadResponse.data && uploadResponse.data.success) {
+                  console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
+                }
+              } catch (err) {
+                console.error("Director photo upload error:", err);
+              }
+            }
+          }
+        }
+
+        alert(translate(successMessage));
+        navigate(`/Transaction/FrmApplicationEntryAuthList.aspx`);
+      } else {
+        const errorMessage = response.data.OUT_ERRORMSG || "An unknown error occurred during site visit submission.";
+        alert(translate(errorMessage));
+      }
+    } catch (error) {
+      console.error("Mode 4 Submit Error:", error);
+      alert(translate(error.response?.data?.message || error.message || "An unexpected error occurred."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMode5Submit = async () => {
+    setLoading(true);
+    debugger;
+
+    try {
+      let prathmikMahitiValues = {};
+      let tradeRateList = [];
+      let selectedTradeIds = [];
+
+      if (!prathmikMahitiTabRef.current) {
+        alert(translate("प्राथमिक माहिती टॅब लोड झालेला नाही."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      await prathmikMahitiTabRef.current.submit();
+      prathmikMahitiValues = prathmikMahitiTabRef.current.getValues();
+      tradeRateList = prathmikMahitiTabRef.current.getTradeRateList();
+      selectedTradeIds = prathmikMahitiTabRef.current.getSelectedTradeIds();
+
+      const prathmikMahitiIsValid = await prathmikMahitiTabRef.current.isValid();
+      if (!prathmikMahitiIsValid) {
+        alert(translate("कृपया 'प्राथमिक माहिती' टॅबमधील त्रुटी दूर करा."));
+        setKey("prathmikMahiti");
+        return;
+      }
+
+      const In_Applitradetype_Str_Formatted = tradeRateList
+        .map((item) => `${item.tradeTypeId}$${item.rate}`)
+        .join("#");
+      const In_Applitrade_Str_Formatted = selectedTradeIds.join("#");
+
+      let directorsData = [];
+      if (sanchalakMahitiTabRef.current) {
+        directorsData = sanchalakMahitiTabRef.current.getDirectorList();
+      } else {
+        alert(translate("संचालक माहिती टॅब लोड झालेला नाही."));
+        setKey("sanchalakMahiti");
+        return;
+      }
+
+      const In_Applidirector_Str_Formatted = directorsData
+        .map((d) => `${d.DIRECTORID || ""}$${d.DIRCTORNAME || ""}$${d.VOTERID || ""}$${d.ADDRESS || ""}$${d.MOBILENO || ""}$${d.EMAIL || ""}$${d.GENDER || ""}$${d.APPLITYPEID || ""}$${d.ADHARNO || ""}`)
+        .join("#");
+
+      let documentDetails = [];
+      if (kagadpatraJodaneTabRef.current) {
+        documentDetails = kagadpatraJodaneTabRef.current.getDocumentDetails();
+      }
+
+      let approvalStatus = "A";
+      let rejectionRemark = "";
+      if (approvalFormikRef.current) {
+        approvalStatus = approvalFormikRef.current.values.approvalStatus;
+        rejectionRemark = approvalFormikRef.current.values.rejectionRemark;
+        
+        if (approvalStatus === "R" && !rejectionRemark.trim()) {
+          alert(translate("कृपया रद्द करण्याचे कारण प्रविष्ट करा."));
+          return;
+        }
+      }
+
+      const formatToYYYYMMDD = (date) => {
+        if (!date) return null;
+        if (date instanceof Date) {
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+        return date;
+      };
+
+      let licenseDays = 0;
+      const startDate = prathmikMahitiValues.fromDate;
+      const endDate = prathmikMahitiValues.toDate;
+      
+      if (startDate instanceof Date && endDate instanceof Date) {
+        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+        licenseDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        if (licenseDays === 1 && diffTime === 0) {
+          licenseDays = 1;
+        } else if (diffTime > 0) {
+        } else {
+          licenseDays = 0;
+        }
+      } else {
+        console.warn("Date values are not valid Date objects for license days calculation.");
+        licenseDays = 0;
+      }
+
+      const safeNumber = (val) => (val ? Number(val) : 0);
+
+      let appStatus = "";
+      let appStatusRemark = "";
+      
+      if (approvalStatus === "A") {
+        appStatus = "VA"; 
+        appStatusRemark = "";
+      } else if (approvalStatus === "R") {
+        appStatus = "R";
+        appStatusRemark = rejectionRemark;
+      }
+
+      const finalPayload = {
+        In_UserId: userId,
+        In_Appid: safeNumber(applicationId),
+        In_AppliNo: storedApplicationNo,
+        In_Mode: 2,
+        In_OldLicencNo: prathmikMahitiValues.licenseNo || "",
+        In_ShopName: prathmikMahitiValues.EngShopName,
+        In_PANNo: prathmikMahitiValues.PanCard,
+        In_ContactNo: safeNumber(prathmikMahitiValues.ContactNo),
+        In_Email: prathmikMahitiValues.Email,
+        In_Address: prathmikMahitiValues.ShopAddress,
+        In_ZoneId: safeNumber(prathmikMahitiValues.ZoneNo),
+        In_WardId: safeNumber(prathmikMahitiValues.WardNo),
+        In_IsProd: prathmikMahitiValues.isItemManufactured === "yes" ? "Y" : "N",
+        In_OwnSpace: prathmikMahitiValues.isOwnBrandBusinessNo === "yes" ? "Y" : "N",
+        In_Agrmentwith: prathmikMahitiValues.AggrementType, 
+        In_Area: safeNumber(prathmikMahitiValues.UsedArea),
+        In_IsCorpNOC: prathmikMahitiValues.NoObjectionCertificate === "yes" ? "Y" : "N",
+        In_BusStartYr: safeNumber(prathmikMahitiValues.YearOfCommencement),
+        In_ShopActNo: prathmikMahitiValues.FormNo,
+        In_foodlicno: prathmikMahitiValues.NondaniFormNo || null,
+        In_LicDays: licenseDays,
+        In_Applitrade_Str: In_Applitradetype_Str_Formatted,
+        In_Applitradetype_Str: In_Applitradetype_Str_Formatted,
+        In_Applidirector_Str: In_Applidirector_Str_Formatted,
+        In_Source: config.source,
+        In_ShopNameMar: prathmikMahitiValues.MarShopName,
+        In_PlaceOwnerName: prathmikMahitiValues.OwnerName,
+        In_PlaceOwnerAddress: prathmikMahitiValues.OwnerAddress,
+        In_FromDate: formatToYYYYMMDD(prathmikMahitiValues.fromDate),
+        In_ToDate: formatToYYYYMMDD(prathmikMahitiValues.toDate),
+        in_amount: safeNumber(prathmikMahitiValues.amount),
+        In_OrgId: safeNumber(UlbId),
+        In_ArrAmount: safeNumber(prathmikMahitiValues.ArrearsAmount),
+        in_ipaddr: ipAddress,
+        In_siuser: userId, 
+        in_PropNo: prathmikMahitiValues.PropertyNo || "",
+        in_MarketPropNo: prathmikMahitiValues.MarketPropertyNo || "",
+        In_Appstatus: appStatus, 
+        In_Appstatusremark: appStatusRemark,
+      };
+
+      console.log("Mode 5 Payload:", finalPayload);
+
+      const response = await apiService.post(`application-verify`, finalPayload);
+      console.log("Mode 5 API Response:", response.data);
+
+      const isSuccess = response.data && response.data.OUT_ERRORCODE === 9999;
+
+      if (isSuccess) {
+        const successMessage = response.data.OUT_ERRORMSG || "Application verified successfully.";
+
+        const applicationIdFromResponse = response.data.OUT_APPID || applicationId;
+
+        if (directorsData.length > 0 && applicationIdFromResponse) {
+          for (const director of directorsData) {
+            if (director._photoFile) {
+              const formData = new FormData();
+              formData.append("directorid", director.DIRECTORID);
+              formData.append("appid", applicationIdFromResponse);
+              formData.append("imagedata", director._photoFile);
+
+              try {
+                const uploadResponse = await apiService.post(`updateDirectorPhoto`, formData, {
+                  headers: { "Content-Type": "multipart/form-data" },
+                });
+                if (uploadResponse.data && uploadResponse.data.success) {
+                  console.log(`Photo uploaded for ${director.DIRCTORNAME}`);
+                }
+              } catch (err) {
+                console.error("Director photo upload error:", err);
+              }
+            }
+          }
+        }
+
+        alert(translate(successMessage));
+        navigate(`/Transaction/FrmApplicationEntryAuthList.aspx`);
+      } else {
+        const errorMessage = response.data.OUT_ERRORMSG || "An unknown error occurred during verification.";
+        alert(translate(errorMessage));
+      }
+    } catch (error) {
+      console.error("Mode 5 Submit Error:", error);
+      alert(translate(error.response?.data?.message || error.message || "An unexpected error occurred."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <div>
       <Header />
@@ -2392,7 +2932,15 @@ const handleMainApplicationSubmit = async () => {
           <SaveButton
             type="button"
             text={translate("जतन करा ")}
-            onClick={handleMainApplicationSubmit}
+            onClick={() => {
+              if (mode == "1") {
+                handleMode4Submit();
+              } else if (mode == "2") {
+                 handleMode5Submit();
+              } else {
+                handleMainApplicationSubmit(); 
+              } 
+            }}
           />
         </div>
       </Container>
