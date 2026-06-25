@@ -155,7 +155,7 @@ const getDocumentDetails = async (req, res) => {
     }
   }
 };
-
+ 
 
 const getSiteVisitDocuments = async (req, res) => {
   let connection;
