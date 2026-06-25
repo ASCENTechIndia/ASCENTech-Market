@@ -156,7 +156,6 @@ const getDocumentDetails = async (req, res) => {
   }
 };
  
-
 const getSiteVisitDocuments = async (req, res) => {
   let connection;
 
@@ -213,7 +212,55 @@ const getSiteVisitDocuments = async (req, res) => {
         Buffer.isBuffer(row.FILEBYTE) &&
         row.FILEBYTE.length > 0
       ) {
-        const fileName = `${crypto.randomUUID()}.png`;
+        let fileExtension = '.png'; 
+        
+        const fileBuffer = row.FILEBYTE;
+
+        if (fileBuffer.length > 4 && 
+            fileBuffer[0] === 0x25 && 
+            fileBuffer[1] === 0x50 && 
+            fileBuffer[2] === 0x44 && 
+            fileBuffer[3] === 0x46) { 
+          fileExtension = '.pdf';
+        }
+        else if (fileBuffer.length > 4 && 
+                 fileBuffer[0] === 0x89 && 
+                 fileBuffer[1] === 0x50 && 
+                 fileBuffer[2] === 0x4E && 
+                 fileBuffer[3] === 0x47) {
+          fileExtension = '.png';
+        }
+        else if (fileBuffer.length > 2 && 
+                 fileBuffer[0] === 0xFF && 
+                 fileBuffer[1] === 0xD8) {
+          fileExtension = '.jpg';
+        }
+        else if (fileBuffer.length > 3 && 
+                 fileBuffer[0] === 0x47 && 
+                 fileBuffer[1] === 0x49 && 
+                 fileBuffer[2] === 0x46) {
+          fileExtension = '.gif';
+        }
+        else if (fileBuffer.length > 4 && 
+                 fileBuffer[0] === 0x50 && 
+                 fileBuffer[1] === 0x4B && 
+                 fileBuffer[2] === 0x03 && 
+                 fileBuffer[3] === 0x04) {
+          fileExtension = '.docx';
+        }
+        else {
+          const docName = row.DOCTYPENAME || '';
+          if (docName.toLowerCase().includes('pdf')) {
+            fileExtension = '.pdf';
+          } else if (docName.toLowerCase().includes('document')) {
+            fileExtension = '.pdf';
+          } else if (docName.toLowerCase().includes('photo') || 
+                     docName.toLowerCase().includes('image')) {
+            fileExtension = '.png';
+          }
+        }
+
+        const fileName = `${crypto.randomUUID()}${fileExtension}`;
         const filePath = path.join(IMAGE_UPLOAD_DIR, fileName);
 
         fs.writeFileSync(filePath, row.FILEBYTE);
