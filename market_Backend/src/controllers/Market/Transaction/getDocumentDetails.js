@@ -155,5 +155,101 @@ const getDocumentDetails = async (req, res) => {
     }
   }
 };
+ 
 
-module.exports = getDocumentDetails;
+const getSiteVisitDocuments = async (req, res) => {
+  let connection;
+
+  try {
+    if (!fs.existsSync(IMAGE_UPLOAD_DIR)) {
+      fs.mkdirSync(IMAGE_UPLOAD_DIR, { recursive: true });
+    }
+
+    const { applicationId, ulbId } = req.body;
+
+    if (!applicationId || !ulbId) {
+      return res.status(400).json({
+        success: false,
+        message: "applicationId and ulbId are required.",
+      });
+    }
+
+    connection = await getConnection();
+
+    const query = `
+      SELECT
+          num_visit_id              AS DOCID,
+          var_visit_appliid         AS APPLICATIONID,
+          var_visit_applino         AS APPLICATIONNO,
+          var_visit_docname         AS DOCTYPENAME,
+          blob_visit_byts           AS FILEBYTE
+      FROM aomk_applisitevisit_dtls
+      WHERE num_visit_ulbid = :ulbId
+        AND var_visit_appliid = :applicationId
+      ORDER BY num_visit_id
+    `;
+
+    const result = await connection.execute(
+      query,
+      {
+        ulbId: Number(ulbId),
+        applicationId: String(applicationId),
+      },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+        fetchInfo: {
+          FILEBYTE: {
+            type: oracledb.BUFFER,
+          },
+        },
+      }
+    );
+
+    const processedRows = result.rows.map((row) => {
+      let fileUrl = null;
+
+      if (
+        row.FILEBYTE &&
+        Buffer.isBuffer(row.FILEBYTE) &&
+        row.FILEBYTE.length > 0
+      ) {
+        const fileName = `${crypto.randomUUID()}.png`;
+        const filePath = path.join(IMAGE_UPLOAD_DIR, fileName);
+
+        fs.writeFileSync(filePath, row.FILEBYTE);
+
+        fileUrl = `/images/${fileName}`;
+      }
+
+      return {
+        docId: row.DOCID,
+        applicationId: row.APPLICATIONID,
+        applicationNo: row.APPLICATIONNO,
+        documentTypeName: row.DOCTYPENAME,
+        fileUrl,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: processedRows.length,
+      data: processedRows,
+    });
+  } catch (err) {
+    console.error("Error fetching site visit documents:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+};
+module.exports = {getDocumentDetails, getSiteVisitDocuments};
