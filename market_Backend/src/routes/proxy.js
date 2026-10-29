@@ -7,7 +7,7 @@ const fetch = (...args) =>
 const router = express.Router();
 
 const API_SECRET = "your-secret-key";
-const BASE_API_URL = "http://localhost:5000/";
+const BASE_API_URL = "https://marketapi.nagarkaryavalinewuat.com/";
 
 function decryptPayload(encryptedText) {
   const bytes = CryptoJS.AES.decrypt(encryptedText, API_SECRET);

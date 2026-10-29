@@ -2,7 +2,9 @@
 import CryptoJS from "crypto-js";
 
 const API_SECRET = "your-secret-key"; // Must match backend
-const BASE_API_URL = "http://localhost:5000";
+const BASE_API_URL = "https://marketapi.nagarkaryavalinewuat.com";
+// const BASE_API_URL = "https://cfcapi.nagarkaryavalinewuat.com";
+// const BASE_API_URL = "http://localhost:5000"
 
 const encryptParams = (params) => {
   const jsonString = JSON.stringify(params);
@@ -71,7 +73,6 @@ const apiService = {
         return { data: decrypted };
       });
   },
-
 
   delete: async (endpoint, data = {}) => {
     const encryptedData = encryptParams(data);

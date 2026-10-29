@@ -6,13 +6,13 @@ const { getMenus , getApplichart, getRegMonthwiseData,getTradTypeCerti,getAppliA
 
 router.post("/MarketMenus", getMenus);
 router.post("/GetDashboardCount",getApplichart)
-router.post("/GetMonthWise",getRegMonthwiseData)
-
-router.post("/GetTradecerti", getTradTypeCerti);
 router.post("/GetAgeingReport",getAppliAgingReport)
+router.post("/GetMonthWise",getRegMonthwiseData)
+router.post("/GetTradecerti", getTradTypeCerti);
+router.post("/GetApplicationStatusTrend", getApplicationStatusTrend);
+
 
 router.post("/GetApplicationRevenue", getApplicationRevenue);
 router.post("/GetApplicationStatus", getApplicationStatus);
-router.post("/GetApplicationStatusTrend", getApplicationStatusTrend);
 
 module.exports = router;
