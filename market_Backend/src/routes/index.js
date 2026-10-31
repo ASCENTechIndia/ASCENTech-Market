@@ -329,7 +329,39 @@ router.use("/", aomk_AppliVerify_ins);
 const getWardsByZone = require("./Market/Transaction/getWardsByZone.js");
 router.use("/", getWardsByZone);
 
-const FrmSiteVisit = require("./Market/Transaction/FrmSiteVisit.js");
-router.use("/", FrmSiteVisit);
+const GetUserlist = require("./Market/Transaction/UserController.js");
+router.use("/", GetUserlist);
+
+const FrmTradeVerifyList = require("./Market/Transaction/FrmTradeVerifyList");
+router.use("/", FrmTradeVerifyList);
+
+const getWardUserConfig = require("./Market/Masters/getWardUserConfig");
+router.use("/", getWardUserConfig);
+
+const aomk_warduserconfig_ins = require("./Market/Masters/aomk_warduserconfig_ins");
+router.use("/", aomk_warduserconfig_ins);
+
+const getUserList = require("./Market/Masters/getUserList");
+router.use("/", getUserList);
+
+
+const FrmApplicationVerifyList = require("./Market/Transaction/FrmApplicationVerifyList.js");
+router.use("/", FrmApplicationVerifyList);
+
+
+const FrmApplicationVerifyMst = require("./Market/Transaction/FrmApplicationVerifyMst.js");
+router.use("/", FrmApplicationVerifyMst);
+
+
+const PaperNotice= require("./Market/Transaction/FrmPaperNotice.js");
+router.use("/",PaperNotice)
+
+const getCompletedApplications = require("./Market/Reports/getCompletedApplications");
+router.use("/", getCompletedApplications);
+
+const FilterApp= require("./Market/Reports/FrmCertiPrint.js")
+router.use("/",FilterApp)
+
+
 
 module.exports = router;

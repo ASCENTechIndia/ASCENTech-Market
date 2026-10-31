@@ -10,20 +10,20 @@ import NavbarText from "../../Components/NavbarText/NavbarText";
 import axios from "axios";
 import { useAuth } from "../../Context/AuthContext";
 import config from "../../utils/config";
+import apiService from "../../../apiService";
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user,menuItems} = useAuth();
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const [menuItems, setMenuItems] = useState([]);
   const [logoUrl, setLogoUrl] = useState("");
-  const [navbarText] = useState({ text1: "", text2: "" });
+  const [navbarText] = useState({ text1: "Market", text2: "Department" });
 
-  const userId = localStorage.getItem("userId");
-  const ulbId = localStorage.getItem("ulbId");
-  const deptId = config.deptId;
+  const userId = user?.userId;
+  const ulbId = user?.ulbId;
+  const deptId = config?.deptId;
   const lastLogin = user?.lastLogin || "N/A";
   const lastLogout = user?.lastLogout || "N/A";
-
+  // console.log("user",userId,ulbId,deptId);
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     let dateObj;
@@ -48,50 +48,8 @@ const Navbar = () => {
     }
     return dateObj.toLocaleString("en-IN", { hour12: true });
   };
-  const fetchMenus = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/MarketMenus`, // Your API endpoint for POST
-        {
-          // Request body for POST
-          userId: userId,
-          ulbId: ulbId,
-          deptId: deptId,
-        }
-      );
-      const allMenus = response.data?.data || [];
 
-      if (!Array.isArray(allMenus)) {
-        console.error("API response is not an array:", allMenus);
-        return;
-      }
-
-      // Create a menu map for structured hierarchy
-      const menuMap = {};
-      allMenus.forEach((menu) => {
-        menuMap[menu.MENUID] = { ...menu, children: [] };
-      });
-
-      // Organize menus into hierarchical structure
-      const structuredMenus = [];
-      allMenus.forEach((menu) => {
-        if (menu.PARENTID === 0) {
-          structuredMenus.push(menuMap[menu.MENUID]);
-        } else {
-          menuMap[menu.PARENTID]?.children.push(menuMap[menu.MENUID]);
-        }
-      });
-
-      setMenuItems(structuredMenus);
-    } catch (error) {
-      console.error(
-        "Error fetching menus:",
-        error.response?.data || error.message
-      );
-    }
-  }, [API_BASE_URL]);
-
-  // Fetch Logo and Navbar Text
+  
   const fetchLogo = useCallback(async () => {
     if (!ulbId) return;
     try {
@@ -108,10 +66,10 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userId && deptId && ulbId) {
-      fetchMenus();
+      // fetchMenus();
       fetchLogo();
     }
-  }, [userId, deptId, ulbId, fetchMenus, fetchLogo]);
+  }, [userId,deptId, ulbId, fetchLogo]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm w-100">
@@ -132,7 +90,7 @@ const Navbar = () => {
         <NavbarText text1={navbarText.text1} text2={navbarText.text2} />
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link " href="/HomePage/Dashboard.aspx">
+            <a className="nav-link " href="/HomePage/Dashboard">
               Home
             </a>
           </li>

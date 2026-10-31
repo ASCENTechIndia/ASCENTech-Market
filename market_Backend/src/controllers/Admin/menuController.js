@@ -6,7 +6,7 @@ const getMenus = async (req, res) => {
 
   try {
     // Extract data from req.body instead of req.query
-    const { userId, ulbId, deptId } = req.body;
+    const { userId, ulbId, deptId } = req.query;
 
     console.log(
       "Received Request Body Params - User:",
