@@ -66,23 +66,23 @@ function App() {
 
     // MASTERS
     ["/Masters/FrmMenuList", <FrmMenuList />],
-    ["/Masters/FrmMenuMst", <FrmMenuMst />],
+    ["/Masters/FrmMenuMst.aspx", <FrmMenuMst />],
     ["/Masters/FrmUserAccessList", <FrmUserAccessList />],
     ["/Masters/FrmTradeList", <FrmTradeList />],
-    ["/Masters/FrmTradeMst", <FrmTradeMst />],
+    ["/Masters/FrmTradeMst.aspx", <FrmTradeMst />],
     ["/Masters/FrmTradeTypeList", <FrmTradeTypeList />],
-    ["/Masters/FrmTradeTypeMst", <FrmTradeTypeMst />],
+    ["/Masters/FrmTradeTypeMst.aspx", <FrmTradeTypeMst />],
     ["/Masters/FrmApplicantTypeList", <FrmApplicantTypeList />],
-    ["/Masters/FrmApplicantTypeMst", <FrmApplicantTypeMst />],
+    ["/Masters/FrmApplicantTypeMst.aspx", <FrmApplicantTypeMst />],
     ["/Masters/FrmDocumentMasterList", <FrmDocumentMasterList />],
     ["/Masters/FrmUserList", <FrmUserList />],
-    ["/Masters/FrmUserMst", <FrmUserMst />],
+    ["/Masters/FrmUserMst.aspx", <FrmUserMst />],
     ["/Masters/FrmTradeCategoryList", <FrmTradeCategoryList />],
-    ["/Masters/FrmTradeCategoryMst", <FrmTradeCategoryMst />],
+    ["/Masters/FrmTradeCategoryMst.aspx", <FrmTradeCategoryMst />],
     ["/Masters/FrmUlbTipList", <FrmUlbTipList />],
-    ["/Masters/FrmUlbTipMst", <FrmUlbTipMst />],
+    ["/Masters/FrmUlbTipMst.aspx", <FrmUlbTipMst />],
     ["/Masters/FrmServiceMapList", <FrmServiceMapList />],
-    ["/Masters/FrmServiceMapMst", <FrmServiceMapMst />],
+    ["/Masters/FrmServiceMapMst.aspx", <FrmServiceMapMst />],
 
     //  REPORTS
     [
@@ -111,22 +111,22 @@ function App() {
     ["/ReportsForm/FrmReceiptReprint", <FrmReceiptReprint />],
     ["/Transaction/FrmLicenseEntryList", <FrmLicenseEntryList />],
     ["/Transaction/FrmLicenseEntry", <FrmLicenseEntry />],
-    ["/Masters/FrmDocumentMasterMst", <FrmDocumentMasterMst />],
+    ["/Masters/FrmDocumentMasterMst.aspx", <FrmDocumentMasterMst />],
     ["/Masters/FrmTradeCategoryConfig", <FrmTradeCategoryConfig />],
     ["/Transaction/FrmApplicationEntryList", <FrmApplicationEntryList />],
     ["/Transaction/FrmAppliEntryList", <FrmApplicationEntryList />],
-    ["/Transaction/FrmApplicationEntryMst", <FrmApplicationEntryMst />],
+    ["/Transaction/FrmApplicationEntryMst.aspx", <FrmApplicationEntryMst />],
     [
       "/Transaction/FrmAppliVerificationList",
       <FrmAppliVerificationList />,
     ],
-    ["/Transaction/FrmAppliVerificationMst", <FrmAppliVerificationMst />],
+    ["/Transaction/FrmAppliVerificationMst.aspx", <FrmAppliVerificationMst />],
     [
       "/Transaction/FrmApplicationEntryAuthList",
       <FrmApplicationEntryAuthList />,
     ],
     [
-      "/Transaction/FrmApplicationEntryAuthMst",
+      "/Transaction/FrmApplicationEntryAuthMst.aspx",
       <FrmApplicationEntryAuthMst />,
     ],
     ["/Transaction/FrmCollectionList", <FrmCollectionList />],
@@ -135,7 +135,7 @@ function App() {
       <FrmGenerateCertificateList />,
     ],
     [
-      "/Transaction/FrmGenerateCertificateMst",
+      "/Transaction/FrmGenerateCertificateMst.aspx",
       <FrmGenerateCertificateMst />,
     ],
     [
